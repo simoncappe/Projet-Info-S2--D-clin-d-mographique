@@ -1,0 +1,97 @@
+COD_VAR;LIB_VAR;LIB_VAR_LONG;COD_MOD;LIB_MOD;TYPE_VAR;LONG_VAR
+COM;Commune ou ARM;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal pour Paris Lyon et Marseille;;;CHAR;5
+TYP_IRIS;Type d'IRIS;Type d'IRIS : habitat (H), activité (A), divers (D), Autre (Z);;;NA;NA
+MODIF_IRIS;Modification de l'IRIS;Type de modification de l'IRIS;;;NA;NA
+LAB_IRIS;Label de l'IRIS;Label de qualité de l'IRIS;;;CHAR;1
+P19_POP;Population en 2019 (princ);Population;;;NUM;16
+P19_POP0002;Pop 0-2 ans en 2019 (princ);Nombre de personnes de 0 à 2 ans;;;NUM;16
+P19_POP0305;Pop 3-5 ans en 2019 (princ);Nombre de personnes de 3 à 5 ans;;;NUM;16
+P19_POP0610;Pop 6-10 ans en 2019 (princ);Nombre de personnes de 6 à 10 ans;;;NUM;16
+P19_POP1117;Pop 11-17 ans en 2019 (princ);Nombre de personnes de 11 à 17 ans;;;NUM;16
+P19_POP1824;Pop 18-24 ans en 2019 (princ);Nombre de personnes de 18 à 24 ans;;;NUM;16
+P19_POP2539;Pop 25-39 ans en 2019 (princ);Nombre de personnes de 25 à 39 ans;;;NUM;16
+P19_POP4054;Pop 40-54 ans en 2019 (princ);Nombre de personnes de 40 à 54 ans;;;NUM;16
+P19_POP5564;Pop 55-64 ans en 2019 (princ);Nombre de personnes de 55 à 64 ans;;;NUM;16
+P19_POP6579;Pop 65-79 ans en 2019 (princ);Nombre de personnes de 65 à 79 ans;;;NUM;16
+P19_POP80P;Pop 80 ans ou plus en 2019 (princ);Nombre de personnes de 80 ans ou plus;;;NUM;16
+P19_POP0014;Pop 0-14 ans en 2019 (princ);Nombre de personnes de 0 à 14 ans;;;NUM;16
+P19_POP1529;Pop 15-29 ans en 2019 (princ);Nombre de personnes de 15 à 29 ans;;;NUM;16
+P19_POP3044;Pop 30-44 ans en 2019 (princ);Nombre de personnes de 30 à 44 ans;;;NUM;16
+P19_POP4559;Pop 45-59 ans en 2019 (princ);Nombre de personnes de 45 à 59 ans;;;NUM;16
+P19_POP6074;Pop 60-74 ans en 2019 (princ);Nombre de personnes de 60 à 74 ans;;;NUM;16
+P19_POP75P;Pop 75 ans ou plus en 2019 (princ);Nombre de personnes de 75 ans ou plus;;;NUM;16
+P19_POP0019;Pop 0-19 ans en 2019 (princ);Nombre de personnes de 0 à 19 ans;;;NUM;16
+P19_POP2064;Pop 20-64 ans en 2019 (princ);Nombre de personnes de 20 à 64 ans;;;NUM;16
+P19_POP65P;Pop 65 ans ou plus en 2019 (princ);Nombre de personnes de 65 ans ou plus;;;NUM;16
+P19_POPH;Pop Hommes en 2019 (princ);Nombre d'hommes;;;NUM;16
+P19_H0014;Pop Hommes 0-14 ans en 2019 (princ);Nombre d'hommes de 0 à 14 ans;;;NUM;16
+P19_H1529;Pop Hommes 15-29 ans en 2019 (princ);Nombre d'hommes de 15 à 29 ans;;;NUM;16
+P19_H3044;Pop Hommes 30-44 ans en 2019 (princ);Nombre d'hommes de 30 à 44 ans;;;NUM;16
+P19_H4559;Pop Hommes 45-59 ans en 2019 (princ);Nombre d'hommes de 45 à 59 ans;;;NUM;16
+P19_H6074;Pop Hommes 60-74 ans en 2019 (princ);Nombre d'hommes de 60 à 74 ans;;;NUM;16
+P19_H75P;Pop Hommes 75 ans ou plus en 2019 (princ);Nombre d'hommes de 75 ans ou plus;;;NUM;16
+P19_H0019;Pop Hommes 0-19 ans en 2019 (princ);Nombre d'hommes de 0 à 19 ans;;;NUM;16
+P19_H2064;Pop Hommes 20-64 ans en 2019 (princ);Nombre d'hommes de 20 à 64 ans;;;NUM;16
+P19_H65P;Pop Hommes 65 ans ou plus en 2019 (princ);Nombre d'hommes de 65 ans ou plus;;;NUM;16
+P19_POPF;Pop Femmes en 2019 (princ);Nombre de femmes;;;NUM;16
+P19_F0014;Pop Femmes 0-14 ans en 2019 (princ);Nombre de femmes de 0 à 14 ans;;;NUM;16
+P19_F1529;Pop Femmes 15-29 ans en 2019 (princ);Nombre de femmes de 15 à 29 ans;;;NUM;16
+P19_F3044;Pop Femmes 30-44 ans en 2019 (princ);Nombre de femmes de 30 à 44 ans;;;NUM;16
+P19_F4559;Pop Femmes 45-59 ans en 2019 (princ);Nombre de femmes de 45 à 59 ans;;;NUM;16
+P19_F6074;Pop Femmes 60-74 ans en 2019 (princ);Nombre de femmes de 60 à 74 ans;;;NUM;16
+P19_F75P;Pop Femmes 75 ans ou plus en 2019 (princ);Nombre de femmes de 75 ans ou plus;;;NUM;16
+P19_F0019;Pop Femmes 0-19 ans en 2019 (princ);Nombre de femmes de 0 à 19 ans;;;NUM;16
+P19_F2064;Pop Femmes 20-64 ans en 2019 (princ);Nombre de femmes de 20 à 64 ans;;;NUM;16
+P19_F65P;Pop Femmes 65 ans ou plus en 2019 (princ);Nombre de femmes de 65 ans ou plus;;;NUM;16
+C19_POP15P;Pop 15 ans ou plus en 2019 (compl);Nombre de personnes de 15 ans ou plus;;;NUM;16
+C19_POP15P_CS1;Pop 15 ans ou plus Agriculteurs exploitants en 2019 (compl);Nombre de personnes de 15 ans ou plus Agriculteurs exploitants;;;NUM;16
+C19_POP15P_CS2;Pop 15 ans ou plus Artisans, Comm., Chefs entr. en 2019 (compl);Nombre de personnes de 15 ans ou plus Artisans, Commerçants, Chefs d'entreprise;;;NUM;16
+C19_POP15P_CS3;Pop 15 ans ou plus Cadres, Prof. intel. sup. en 2019 (compl);Nombre de personnes de 15 ans ou plus Cadres et Professions intellectuelles supérieures;;;NUM;16
+C19_POP15P_CS4;Pop 15 ans ou plus Prof. intermédiaires en 2019 (compl);Nombre de personnes de 15 ans ou plus Professions intermédiaires;;;NUM;16
+C19_POP15P_CS5;Pop 15 ans ou plus Employés en 2019 (compl);Nombre de personnes de 15 ans ou plus Employés;;;NUM;16
+C19_POP15P_CS6;Pop 15 ans ou plus Ouvriers en 2019 (compl);Nombre de personnes de 15 ans ou plus Ouvriers;;;NUM;16
+C19_POP15P_CS7;Pop 15 ans ou plus Retraités en 2019 (compl);Nombre de personnes de 15 ans ou plus Retraités;;;NUM;16
+C19_POP15P_CS8;Pop 15 ans ou plus Autres en 2019 (compl);Nombre de personnes de 15 ans ou plus Autres sans activité professionnelle;;;NUM;16
+C19_H15P;Pop 15 ans ou plus Hommes en 2019 (compl);Nombre d'hommes de 15 ans ou plus;;;NUM;16
+C19_H15P_CS1;Pop 15 ans ou plus Hommes Agriculteurs exploitants en 2019 (compl);Nombre d'hommes de 15 ans ou plus Agriculteurs exploitants;;;NUM;16
+C19_H15P_CS2;Pop 15 ans ou plus Hommes Artisans, Comm., Chefs entr. en 2019 (compl);Nombre d'hommes de 15 ans ou plus Artisans, Commerçants, Chefs d'entreprise;;;NUM;16
+C19_H15P_CS3;Pop 15 ans ou plus Hommes Cadres, Prof. intel. sup. en 2019 (compl);Nombre d'hommes de 15 ans ou plus Cadres et Professions intellectuelles supérieures;;;NUM;16
+C19_H15P_CS4;Pop 15 ans ou plus Hommes Prof. intermédiaires en 2019 (compl);Nombre d'hommes de 15 ans ou plus Professions intermédiaires;;;NUM;16
+C19_H15P_CS5;Pop 15 ans ou plus Hommes Employés en 2019 (compl);Nombre d'hommes de 15 ans ou plus Employés;;;NUM;16
+C19_H15P_CS6;Pop 15 ans ou plus Hommes Ouvriers en 2019 (compl);Nombre d'hommes de 15 ans ou plus Ouvriers;;;NUM;16
+C19_H15P_CS7;Pop 15 ans ou plus Hommes Retraités en 2019 (compl);Nombre d'hommes de 15 ans ou plus Retraités;;;NUM;16
+C19_H15P_CS8;Pop 15 ans ou plus Hommes Autres en 2019 (compl);Nombre d'hommes de 15 ans ou plus Autres sans activité professionnelle;;;NUM;16
+C19_F15P;Pop 15 ans ou plus Femmes en 2019 (compl);Nombre de femmes de 15 ans ou plus;;;NUM;16
+C19_F15P_CS1;Pop 15 ans ou plus Femmes Agriculteurs exploitants en 2019 (compl);Nombre de femmes de 15 ans ou plus Agriculteurs exploitants;;;NUM;17
+C19_F15P_CS2;Pop 15 ans ou plus Femmes Artisans, Comm., Chefs entr. en 2019 (compl);Nombre de femmes de 15 ans ou plus Artisans, Commerçants, Chefs d'entreprise;;;NUM;16
+C19_F15P_CS3;Pop 15 ans ou plus Femmes Cadres, Prof. intel. sup. en 2019 (compl);Nombre de femmes de 15 ans ou plus Cadres et Professions intellectuelles supérieures;;;NUM;16
+C19_F15P_CS4;Pop 15 ans ou plus Femmes Prof. intermédiaires en 2019 (compl);Nombre de femmes de 15 ans ou plus Professions intermédiaires;;;NUM;16
+C19_F15P_CS5;Pop 15 ans ou plus Femmes Employés en 2019 (compl);Nombre de femmes de 15 ans ou plus Employés;;;NUM;16
+C19_F15P_CS6;Pop 15 ans ou plus Femmes Ouvriers en 2019 (compl);Nombre de femmes de 15 ans ou plus Ouvriers;;;NUM;16
+C19_F15P_CS7;Pop 15 ans ou plus Femmes Retraités en 2019 (compl);Nombre de femmes de 15 ans ou plus Retraités;;;NUM;16
+C19_F15P_CS8;Pop 15 ans ou plus Femmes Autres en 2019 (compl);Nombre de femmes de 15 ans ou plus Autres sans activité professionnelle;;;NUM;16
+P19_POP_FR;Pop Français en 2019 (princ);Nombre de personnes de nationalité française;;;NUM;16
+P19_POP_ETR;Pop Etrangers en 2019 (princ);Nombre de personnes étrangères;;;NUM;16
+P19_POP_IMM;Pop Immigrés en 2019 (princ);Nombres de personnes immigrées;;;NUM;16
+P19_PMEN;Pop ménages en 2019 (princ);Population des ménages;;;NUM;16
+P19_PHORMEN;Pop hors ménages en 2019 (princ);Population hors ménages;;;NUM;16
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;975010000;Miquelon-Langlade;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;975020101;Saint-Pierre - IRIS 0101;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;975020102;Saint-Pierre - IRIS 0102;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;977010101;Sous le vent;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;977010102;Centre;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;977010103;Au vent;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;978010101;Terres Basses-Baie Nettle-Sandy Ground;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;978010102;Marigot Est et Nord;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;978010103;Marigot Centre et Sud;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;978010104;Saint-James-Diamant-Bellevue;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;978010105;Spring-Concordia;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;978010106;Galisbay-Agrement;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;978010107;C. Gate-St Louis-Rambaud-Colomb.-Pic P.;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;978010108;La Savane-Gd Case-Anse Marcel-Cul de Sac;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;978010109;Quartier d'Orleans-Gloire-Griselle;CHAR;9
+IRIS;IRIS;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal suivi du numéro d'IRIS;978010110;Grand Fond-Belle Plaine-Oyster Pond;CHAR;9
+COM;Commune ou ARM;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal pour Paris Lyon et Marseille;97501;Miquelon-Langlade;CHAR;5
+COM;Commune ou ARM;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal pour Paris Lyon et Marseille;97502;Saint-Pierre;CHAR;5
+COM;Commune ou ARM;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal pour Paris Lyon et Marseille;97701;Saint-Barthélemy;CHAR;5
+COM;Commune ou ARM;Code du département suivi du numéro de commune ou du numéro d'arrondissement municipal pour Paris Lyon et Marseille;97801;Saint-Martin;CHAR;5
