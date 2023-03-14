@@ -43,16 +43,19 @@ df=pd.read_csv('regiondemographique.csv',usecols=['REG_ID', 'Région',
        'Indicateur', 'SEX', 'Genre', 'POS','Année','Value'])
 
 #regiondemographique.csv est une exportation du site de l'OCDE que j'ai effectuée
-
-df=df[(df.Indicateur==df['Indicateur'][0]) & (df.Année==2005)&(df.SEX=='T') ]
+indi=df['Indicateur'][3]
+df=df[(df.Indicateur==indi) & (df.Année==2005)&(df.SEX=='T') &(df['Région']=='Normandie')]
 #Je veux le Taux de mortalité régional en 2005 pour les hommes ET les femmes (il existe des données différenciées)
-
+print(Names)
 R=[]
 for i in df['Région']:
     p=d[d['Région']==i].index.values[0]
     R.append(G[p])
 gpd=geopandas.GeoDataFrame(df,geometry=R)
-gpd.plot("Value")
+gpd.plot("Value",legend=True)
+plt.title(indi[0:35])
+plt.legend()
 plt.show()
+
 
 
