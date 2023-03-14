@@ -26,11 +26,16 @@ for i in g['features']:
         s=[Polygon(p[0]) for p in mp]
         G.append(MultiPolygon(s))
         
-d=pd.DataFrame(Names,columns=['Nom'])
+Names[6]='Nouvelle-Aquitaine'
+Names[2]='Provence-Alpes-Côte d’Azur'
+Names[3]='Grand Est'
+Names[7]='Centre - Val de Loire'
+
+d=pd.DataFrame(Names,columns=['Région'],index=np.arange(len(Names)))
 d['Id']=Id
 
 
-#gd=geopandas.GeoDataFrame(d,geometry=G)
+ggd=geopandas.GeoDataFrame(d,geometry=G)
 
 
 
@@ -40,14 +45,14 @@ df=pd.read_csv('regiondemographique.csv',usecols=['REG_ID', 'Région',
 #regiondemographique.csv est une exportation du site de l'OCDE que j'ai effectuée
 
 df=df[(df.Indicateur==df['Indicateur'][0]) & (df.Année==2005)&(df.SEX=='T') ]
-df.reset_index()
 #Je veux le Taux de mortalité régional en 2005 pour les hommes ET les femmes (il existe des données différenciées)
-print(df)
 
-
-gd=geopandas.GeoDataFrame(df,geometry=G[1:13])
-
-gd.plot("Value",legend=True)
-plt.title('Taux de mortalité')
-plt.legend()
+R=[]
+for i in df['Région']:
+    p=d[d['Région']==i].index.values[0]
+    R.append(G[p])
+gpd=geopandas.GeoDataFrame(df,geometry=R)
+gpd.plot("Value")
 plt.show()
+
+
