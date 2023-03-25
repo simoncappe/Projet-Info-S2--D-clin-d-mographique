@@ -5,7 +5,6 @@ import geopandas
 from shapely.geometry import Point, LineString, Polygon, MultiPolygon
 
 g = pd.read_json("data\geometry\Tl3_jpan.json")
-print(g)
 
 
 Names = []

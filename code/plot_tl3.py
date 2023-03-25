@@ -36,7 +36,6 @@ df_dep = df_dep[(df_dep.TL == 3) & (df_dep.Année == 2005)]
 df_dep = df_dep.reset_index(drop=True)
 
 
-
 R = []
 for i in df_dep['Région']:
     p = dep_pd[dep_pd['Departements'] == i].index.values[0]
