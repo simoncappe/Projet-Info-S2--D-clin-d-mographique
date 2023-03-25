@@ -99,19 +99,3 @@ print(x)
 
 plt.hist(x, weights=tranches_age.values(), orientation="horizontal")
 plt.show()
-
-
-
-
-df_dep = df_dep[(df_dep.TL == 3) & (df_dep.Année == 2005)]
-df_dep = df_dep.reset_index(drop=True)
-
-R = []
-for i in df_dep["Région"]:
-    p = dep_pd[dep_pd["Departements"] == i].index.values[0]
-    R.append(G_dep[p])
-gpd = geopandas.GeoDataFrame(df_dep, geometry=R)
-gpd.plot("Value", legend=True)
-plt.title("Mortalité en 2005")
-plt.legend()
-# plt.show()
