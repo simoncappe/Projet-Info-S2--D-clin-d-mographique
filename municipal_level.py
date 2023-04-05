@@ -10,7 +10,7 @@ g = ...  # dataframe qui contient les coordonnées des polygons (télécharger s
 
 
 
-#Là il faut en général faire quelques efforts pour sortir les polygones des dataframes trouvées sur internet:
+# Là il faut en général faire quelques efforts pour sortir les polygones des dataframes trouvées sur internet:
 
 Names = []
 
@@ -26,7 +26,7 @@ for i in g['features']:
 
     else:
         ...
-        
+
 
 
 
