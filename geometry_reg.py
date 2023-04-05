@@ -7,7 +7,7 @@ from shapely.geometry import Point, LineString, Polygon, MultiPolygon
 
 g=pd.read_json('geometry.json')
 
-#Fichier sencé contenir les frontières de toute les régions de France, à explorer
+# Fichier sencé contenir les frontières de toute les régions de France, à explorer
 
 
 Names=[]
@@ -39,7 +39,7 @@ ggd=geopandas.GeoDataFrame(d,geometry=G)
 
 
 '''
-df=pd.read_csv('regiondemographique.csv',usecols=['REG_ID', 'Région', 
+df=pd.read_csv('regiondemographique.csv',usecols=['REG_ID', 'Région',
        'Indicateur', 'SEX', 'Genre', 'POS','Année','Value'])
 
 #regiondemographique.csv est une exportation du site de l'OCDE que j'ai effectuée
@@ -80,6 +80,13 @@ for i in dep['features'] :
         G_dep.append(MultiPolygon(coords_dep))
         test+=1
 
+# Il manque l'Ain (1), l'Oise (60), la Côte d'Or (21), la Meurthe-et-Moselle (54), le Vaucluse (84),
+# les Hautes Pyrénées (65), la Charente-Maritime (17), la Vendée (85), le Finistère (29),
+# les Côtes d'Armor (22), et l'Ille et Villaine (35)
+
+Names_dep.sort()
+print(Names_dep)
+
 dep_pd = pd.DataFrame(Names_dep, columns=['Departements'])
 dep_pd['Id_dep']=Id_dep
 
@@ -88,3 +95,5 @@ geo_dep = geopandas.GeoDataFrame(dep_pd, geometry=G_dep)
 
 geo_dep.plot()
 plt.show()
+
+

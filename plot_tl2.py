@@ -7,7 +7,7 @@ from shapely.geometry import Point, LineString, Polygon, MultiPolygon
 
 g=pd.read_json('tl2_fr.json')
 
-#Fichier sencé contenir les frontières de toute les régions de France
+# Fichier sencé contenir les frontières de toute les régions de France
 
 Names=[]
 Id=[]
@@ -94,3 +94,5 @@ while(Names_dep[p]!='Oise'):
 print(p)
 geo_dep.loc[[p]].plot()
 plt.show()
+
+
