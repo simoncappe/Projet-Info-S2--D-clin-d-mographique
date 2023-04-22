@@ -7,19 +7,21 @@ import numpy as np
 geo = gpd.read_file('data\geometry\Tl2_fr.json')
 
 df = pd.read_csv('data\data_csv\data_tl2_fr.csv', usecols=['REG_ID', 'Région',
-                                             'Indicateur', 'SEX', 'Genre', 'POS', 'Année', 'Value'])
+                                                           'Indicateur', 'SEX', 'Genre', 'POS', 'Année', 'Value'])
 
 # regiondemographique.csv est une exportation du site de l'OCDE que j'ai effectuée
 indi = df['Indicateur'][3]
 df = df[(df.Indicateur == indi) & (df.Année == 2005) & (df.SEX == 'T')]
 
-data = df.merge(geo,left_on = 'Région',right_on = 'libgeo',how = 'right')[['libgeo','Value']]
+data = df.merge(geo, left_on='Région', right_on='libgeo',
+                how='right')[['libgeo', 'Value']]
 
-data['A'] = np.random.exponential(80,18)
-data['B'] = np.random.exponential(80,18)
-data['C'] = np.random.exponential(80,18)
+data['A'] = np.random.exponential(80, 18)
+data['B'] = np.random.exponential(80, 18)
+data['C'] = np.random.exponential(80, 18)
 
-geojson_dict = geo.__geo_interface__#conversion des géométries en format geojson
+# conversion des géométries en format geojson
+geojson_dict = geo.__geo_interface__
 
 
 app = Dash(__name__)
@@ -44,8 +46,7 @@ app.layout = html.Div(
     Input("letter", "value"),
 )
 def display_choropleth(letter):
-    
-    
+
     fig = px.choropleth(
         data,
         geojson=geojson_dict,
@@ -62,4 +63,3 @@ def display_choropleth(letter):
 
 if __name__ == "__main__":
     app.run_server(debug=True)
-
