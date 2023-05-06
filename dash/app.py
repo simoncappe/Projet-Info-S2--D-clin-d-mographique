@@ -3,12 +3,12 @@ import dash
 from dash import dcc
 from dash import html
 import geopandas as gpd
+import numpy as np
 import plotly.express as px
 
 import pandas as pd
 
 import matplotlib.pyplot as plt
-
 
 # data
 VARPOP = pd.read_csv('data\VARPOP.csv')
@@ -33,16 +33,19 @@ data = gpd.GeoDataFrame(VARPOP.merge(
     gdp, how='right', left_on='CODGEO', right_on='INSEE_COM'), geometry='geometry')
 
 # data VARPOP + geometry
-data = data[['CODGEO', 'NETNAT', 'NETMIG', 'NETMOB', 'geometry']]
+data = data[['CODGEO','INSEE_DEP', 'NETNAT', 'NETMIG', 'NETMOB', 'geometry']]
 
 
 # conversion des géométries en format geojson
-geojson_dict = data['geometry'].__geo_interface__
+geojson_dict = data.__geo_interface__
 
 
 # Données extraites
 
 
+df = gpd.GeoDataFrame(data[data.INSEE_DEP == '93'],geometry = 'geometry')
+print(df)
+df.to_file('test') 
 app = Dash(__name__)
 
 app.layout = html.Div(
@@ -81,3 +84,4 @@ def display_choropleth(composante):
 
 if __name__ == "__main__":
     app.run_server(debug=True)
+

@@ -13,17 +13,17 @@ server = app.server
 
 
 #Importation des données (uniquement de l'immigration)
-data_arr_mun = geopandas.read_file('../data_geom/arrond_mun/ARRONDISSEMENT_MUNICIPAL.shp')
+data_arr_mun = geopandas.read_file('data\Arrondissements municipal\ARRONDISSEMENT_MUNICIPAL.shp')
 data_arr_mun = data_arr_mun[['ID', 'NOM', 'NOM_M', 'INSEE_COM', 'POPULATION', 'geometry']]
-data_commune = geopandas.read_file('../data_geom/commune/COMMUNE.shp')
+data_commune = geopandas.read_file('data\COMMUNE\COMMUNE.shp')
 data_commune = data_commune[['ID', 'NOM', 'NOM_M', 'INSEE_COM', 'geometry']]
 
 data_complete = data_commune.append(data_arr_mun)
 
-data_migration2019 = pd.read_csv('../data_migration/base-flux-mobilite-residentielle-2019.csv', sep=';').astype('str')
+data_migration2019 = pd.read_csv('data\Base-flux-mobilite-residentielle-2019.csv', sep=';').astype('str')
 data_migration2019 = data_migration2019[data_migration2019['DCRAN']=='99999']
 carte = geopandas.GeoDataFrame(data_migration2019.merge(data_complete, left_on='LIBGEO', right_on='NOM', how='outer'), geometry='geometry')
-carte = carte[['CODGEO', 'NBFLUX_C19_POP01P', 'NOM', 'ID', 'INSEE_COM', 'geometry']]
+carte = carte[['CODGEO', 'NBFLUX_C19_PO.P01P', 'NOM', 'ID', 'INSEE_COM', 'geometry']]
 carte['NBFLUX_C19_POP01P'] = carte['NBFLUX_C19_POP01P'].astype(float)
 carte['NBFLUX_C19_POP01P'] = carte['NBFLUX_C19_POP01P'].fillna(0.)
 carte['Année']=2019
