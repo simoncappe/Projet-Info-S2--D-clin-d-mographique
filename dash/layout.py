@@ -32,8 +32,8 @@ data['DEP'][29275:29295] = '75'
 df = data.merge(data_complete, left_on='CODGEO',
                 right_on='INSEE_COM', how='right')
 #print(df['DEP'].unique())
-df = df[(df.DEP == '38') | (df.DEP == '01') | (df.DEP == '69') | (df.DEP == '42') | (
-    df.DEP == '71') | (df.DEP == '03') | (df.DEP == '58') | (df.DEP == '21')]
+df = df[(df.DEP == '38') | (df.DEP == '01')]# | (df.DEP == '69') | (df.DEP == '42') | (
+    #df.DEP == '71') | (df.DEP == '03') | (df.DEP == '58') | (df.DEP == '21')]
 
 carte = geopandas.GeoDataFrame(df, geometry='geometry')
 
