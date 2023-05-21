@@ -7,50 +7,102 @@ from shapely.geometry import Point, LineString, Polygon
 import plotly.express as px
 import numpy as np
 
+
+
+
+
+
+
+
+
 # Initialisation de l'app
 app = dash.Dash(__name__)
 app.title = 'Evolution démographique de la France'
 server = app.server
 
 
-# Importation des données (uniquement de l'immigration)
-'''data_arr_mun = geopandas.read_file('data\Arrondissements municipal\ARRONDISSEMENT_MUNICIPAL.shp')
-data_arr_mun = data_arr_mun[['ID', 'NOM', 'NOM_M', 'INSEE_COM', 'POPULATION', 'geometry']]
-data_commune = geopandas.read_file('data\COMMUNE\COMMUNE.shp')
-data_commune = data_commune[['ID', 'NOM', 'NOM_M', 'INSEE_COM', 'geometry']]
-
-data_complete = data_commune.append(data_arr_mun)'''
-
-gdp = geopandas.read_file('data\/france\/france.shp')[
+DEP = '93'
+# Importation des shapefile 
+gdp = geopandas.read_file('data\/france\/france.shp')[  #your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
-data_complete = gdp
-
-data = pd.read_csv('data\VARPOP.csv')
-data['DEP'][29275:29295] = '75'
+gdp = gdp.rename(columns={'INSEE_COM':'CODGEO'})
+gdp = gdp[gdp.INSEE_DEP == DEP]
 
 
-df = data.merge(data_complete, left_on='CODGEO',
-                right_on='INSEE_COM', how='right')
-#print(df['DEP'].unique())
-df = df[(df.DEP == '38') | (df.DEP == '01')]# | (df.DEP == '69') | (df.DEP == '42') | (
-    #df.DEP == '71') | (df.DEP == '03') | (df.DEP == '58') | (df.DEP == '21')]
+geojson_dict = gdp[['CODGEO', 'geometry']].__geo_interface__#données format GEOJson
 
-carte = geopandas.GeoDataFrame(df, geometry='geometry')
-
-'''
-dataframe = pd.read_csv('data\/app.csv')
-dataframe['CODGEO'] = dataframe['CODGEO'].astype(str)
-print(dataframe['CODGEO'].unique())
-'''
-dataframe_hist = pd.read_csv('data\cc.csv')
-dr = dataframe_hist.merge(df,left_on = 'CODGEO',right_on = 'CODGEO',how = 'right')
+#importation des données
+data = pd.read_pickle('data\demographic.pkl')[['CODGEO', 'REG', 'DEP', 'LIBGEO',
+       'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'TIME']]#your path
+data = data[data.DEP == DEP]
 
 
-geojson_dict = carte[['CODGEO', 'geometry']].__geo_interface__
+#fonction qui sera utile dans la suite
+def prepare_datamap(i,f):
+    '''fonction qui prépare la dataframe à ploter
+        i : année initiale
+        f : année finale'''
+        
+    if i<=f:
+        
+        L = []
+        for p in range(i, f+1):
+            L.append(data[data.TIME == p])
+
+        final = L[0][['CODGEO', 'REG', 'DEP','LIBGEO']]
+
+
+
+        final['POPINC'] = L[0]['POPINC']
+        final['NETNAT'] = L[0]['NETNAT']
+        final['NETMOB'] = L[0]['NETMOB']    
+        final['NETMIG'] = L[0]['NETMIG']
+        final = final.reset_index()
+        for p in range(1, len(L)):
+            data_frame = L[p].reset_index()
+            final['POPINC'] = final['POPINC'] + data_frame['POPINC']
+            final['NETNAT'] = final['NETNAT'] +data_frame['NETNAT']
+            final['NETMOB'] = final['NETMOB'] + data_frame['NETMOB']
+            final['NETMIG'] = final['NETMIG'] + data_frame['NETMIG']
+
+        final = final.reset_index()
+
+        
+        final['CAUSE'] = np.abs(final[['NETNAT', 'NETMOB', 'NETMIG']]).idxmax(
+        axis=1)  # maximum des valeurs absolues des composantes
+        def signe(x): return (x > 0) + (x < 0)*(-1)# Si la population a augmenté ou baissé
+        final['SGN'] = signe(final['POPINC'])
+        final['C'] = np.arange(len(final))
+        for index in range(len(final)):
+            if final['SGN'][index] == -1:
+                if final['CAUSE'][index] == 'NETMOB':
+                    final['C'][index] = 'NETMOB -'
+                elif final['CAUSE'][index] == 'NETNAT':
+                    final['C'][index] = 'NETNAT -'
+                else:
+                    final['C'][index] = 'NETMIG -'
+            else:
+                if final['CAUSE'][index] == 'NETMOB':
+                    final['C'][index] = 'NETMOB +'
+                elif final['CAUSE'][index] == 'NETNAT':
+                    final['C'][index] = 'NETNAT +'
+                else:
+                    final['C'][index] = 'NETMIG +'
+
+        
+        return final
+
+
+
+
+
+
+
+
 
 
 years = [2014, 2015, 2016, 2017, 2018, 2019]
-mapbox_access_token = "pk.eyJ1IjoidGhlb25vYmxlIiwiYSI6ImNsaDI0dDEwZjFhOGIzZGp1ZzRwMHg4NWsifQ.hKTjHzcgmTxPZ9NMzFBTQg"
+token = 'pk.eyJ1Ijoic2ltb25jYXBwZSIsImEiOiJjbGh1cDdhZXMwMjB1M2ptdzR3MnNoaDZwIn0.JMQT7xIPxnssJWXmANc2oA'
 mapbox_style = "mapbox://styles/theonoble/clh28k2te00mq01pg15ngcvbf"
 
 
@@ -68,7 +120,7 @@ app.layout = html.Div(
                 html.H4(children="Evolution Démographique de la France"),
                 html.P(
                     id="description",
-                    children="Voilà comment on obtient les données",
+                    children="Description des variables:",
                 ),
             ],
         ),
@@ -78,6 +130,23 @@ app.layout = html.Div(
                 html.Div(
                     id="left-column",
                     children=[
+                        html.Div(
+                            id="slider-container",
+                            children=[
+                                html.P(
+                                    id="slider-text",
+                                    children="Faire coulisser le curseur pour changer l'année :",
+                                ),
+                                dcc.Slider(
+                                    id="year",
+                                    min=2013,  # à remplacer par min(years)
+                                    max=2019,  # à remplacer par max(years)
+                                    value=2019,
+                                    step = 1,
+                                    marks={i:str(i) for i in range(2014,2020)}
+                                ),
+                            ],
+                        ),
                         html.P(id="chart_selector",
                                children="Sélectionner un graphe :"),
                         dcc.Dropdown(
@@ -90,31 +159,17 @@ app.layout = html.Div(
                                 {'label': "Incrément de population",
                                     'value': 'POPINC'},
                                 {'label': "cause du changement de population",
-                                    'value': 'C'},# l'utilisateur voit les labels et les values corresondent à ce que'on appelle dans les callbacks.
+                                    'value': 'C'},  # l'utilisateur voit les labels et les values corresondent à ce que'on appelle dans les callbacks.
                             ],
                             value='NETNAT',
                         ),
-                        
+
                         html.Div(
                             id="map-container",
                             children=[
                                 dcc.Graph(
                                     id="choropleth",
-                                    #'''figure=dict(
-                                    #    layout=dict(
-                                    #        mapbox=dict(
-                                    #            layers=[],
-                                    #            accesstoken=mapbox_access_token,
-                                    #            style=mapbox_style,
-                                    #            center=dict(
-                                    #                lat=38.72490, lon=-95.61446
-                                    #            ),
-                                    #            pitch=0,
-                                    #            zoom=3.5,
-                                    #        ),
-                                    #        autosize=True,
-                                    #    ),
-                                    #),'''
+                                    
                                 ),
                             ]
                         )
@@ -123,10 +178,11 @@ app.layout = html.Div(
                 html.Div(
                     id='right-column',
                     children=[
-                        html.P(id = 'code-selector', children = 'Sélectionner une ville'),
-                        dcc.Dropdown(id = 'code',
-                                     options = dr['CODGEO'].unique(),value = dr['CODGEO'].unique()[0]
-                        ),
+                        html.P(id='code-selector',
+                               children='Sélectionner une ville'),
+                        dcc.Dropdown(id='code',
+                                     options=data['CODGEO'].unique(), value=data['CODGEO'].unique()[0]
+                                     ),
                         dcc.Graph(
                             id="selected-data",
                             figure=dict(
@@ -137,7 +193,7 @@ app.layout = html.Div(
                                 ),
                             ),
                         ),
-                        
+
                     ]
                 )
             ],
@@ -145,84 +201,68 @@ app.layout = html.Div(
     ],
 )
 
-'''html.Div(
-                            id="slider-container",
-                            children=[
-                                html.P(
-                                    id="slider-text",
-                                    children="Faire coulisser le curseur pour changer l'année :",
-                                ),
-                                dcc.Slider(
-                                    id="choix_année",
-                                    min=2000,  # à remplacer par min(years)
-                                    max=2023,  # à remplacer par max(years)
-                                    value=2019,
-                                    marks={
-                                        str(year): {
-                                            "label": str(year),
-                                        }
-                                        for year in years
-                                    }
-                                ),
-                            ],
-                        ),'''
-                        
-
-
-
-
-
 @app.callback(
     Output('choropleth', 'figure'),
-    
 
-    # Input('year', 'value'),
+
+    Input('year', 'value'),
     Input('comp', 'value')
 )
-
-
-
-def display_choropleth(comp):
-    fig = px.choropleth(
+def display_choropleth(year,comp):
+    carte = geopandas.GeoDataFrame(prepare_datamap(2014,year).merge(gdp,left_on = 'CODGEO',right_on = 'CODGEO',how = 'right'),geometry = 'geometry')
+    u = carte['geometry'].iloc[0].centroid
+    fig = px.choropleth_mapbox(
         carte,
         geojson=geojson_dict,
-        color=comp,
         locations='CODGEO',
-        featureidkey='properties.CODGEO',
-        projection="mercator",
+        color=comp,
+        featureidkey="properties.CODGEO",
+        color_continuous_scale="Viridis",
+        opacity=0.5,
+        labels={comp: comp},
+        center={"lon": u.x, "lat": u.y},
+        zoom=7
     )
-    fig.update_geos(fitbounds="locations", visible=False)
-    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+
+    fig.update_layout(
+        margin={"r": 0, "t": 0, "l": 0, "b": 0},
+        mapbox=dict(accesstoken=token)
+    )
+
     return fig
 
 
 @app.callback(
-    Output('selected-data','figure'),
-       Input('code','value')
+    Output('selected-data', 'figure'),
+    Input('choropleth', 'clickData')
 )
-def display_hist(code):
-    data = dataframe_hist[dataframe_hist.CODGEO == code]
-    f = pd.DataFrame(np.arange(18))
-    f['TIME'] = [2014,2014,2014,2015,2015,2015,2016,2016,2016,2017,2017,2017,2018,2018,2018,2019,2019,2019]
-    L=[]
-    for k in range(6):
-        L+=['NETMIG','NETMOB','NETNAT']
-    f['IND'] = L
-    f['VALUE'] = list(data.iloc[0][1:19])
-    fig =px.histogram(f,
-                   x="TIME",
-                   y="VALUE",
-                   color="IND",
-                   barmode="stack", nbins=23,title = 'évolution démographique dans le '+str(code))
-    fig.update_layout(
-    barmode="overlay",
-    bargap=0.1)
-    
-    return fig
+def display_hist(clickData):
+    if clickData is not None:
+        code = clickData['points'][0]['location']
+        #code = gdp['CODGEO'][selected_data]
+        dataframe_hist = data[data.CODGEO == code]
+        df = pd.DataFrame(np.arange(len(dataframe_hist)*3))
+        TIME = []
+        IND = []
+        VALUE = []
+        for i in range(2014,2020):
+            TIME+=[i,i,i]
+            IND+=['NETMOB','NETNAT','NETMIG']
+            VALUE+=[dataframe_hist[dataframe_hist.TIME == i]['NETMOB'].iloc[0],dataframe_hist[dataframe_hist.TIME == i]['NETNAT'].iloc[0],dataframe_hist[dataframe_hist.TIME == i]['NETMIG'].iloc[0]]
+        df['Année'] = TIME
+        df['Indicateur'] = IND
+        df['Valeur'] = VALUE
+        fig = px.histogram(df,
+                       x="Année",
+                       y="Valeur",
+                       color='Indicateur',
+                       barmode="stack", nbins=23)
+        fig.update_layout(
+            barmode="overlay",
+            bargap=0.1)
 
-
-
-
+        return fig
+    return {}
 
 
 if __name__ == "__main__":
