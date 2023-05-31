@@ -194,13 +194,7 @@ app.layout = html.Div(
 
                         dcc.Graph(
                             id="selected-data",
-                            figure=dict(
-                                data=[dict(x=0, y=0)],
-                                layout=dict(
-                                    autofill=True,
-                                    margin=dict(t=75, r=50, b=100, l=50),
-                                ),
-                            ),
+                            style={"height": "300px", "width": "400px"} 
                         ),
 
                     ]
@@ -263,6 +257,7 @@ def display_hist(clickData):
                                color='Indicateur',
                                barmode="stack", nbins=23, title='Démographie à ' + dataframe[dataframe.CODGEO == code]['LIBGEO'].iloc[0])
             fig.update_layout(
+                 margin=dict(l=30, r=30, t=30, b=20),
                 barmode="overlay",
                 bargap=0.1)
 
