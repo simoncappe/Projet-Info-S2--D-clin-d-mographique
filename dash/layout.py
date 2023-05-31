@@ -283,7 +283,7 @@ def generate_com_map(year,comp,DEP):
     carte = geopandas.GeoDataFrame(prepare_datamap(2014, year, data).merge(
     gdp, left_on='CODGEO', right_on='CODGEO', how='right'), geometry='geometry')
     if carte.empty:
-        return {}
+        x = 3
     else:
         u = carte['geometry'].iloc[0].centroid
         fig = px.choropleth_mapbox(
