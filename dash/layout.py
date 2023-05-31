@@ -15,7 +15,7 @@ server = app.server
 
 
 # Importation des shapefile
-shp = geopandas.read_file('data\/france\/france.shp')[  # your path
+shp = geopandas.read_file('../donnees/france/france.shp')[  # your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
 shp['INSEE_DEP'][29275:29295] = '75'
 
@@ -29,7 +29,7 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('data\demographic.pkl')# your path
+dataframe = pd.read_pickle('../donnees/demographic.pkl')# your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO','POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'TIME']]  
 data = dataframe[dataframe.DEP == '01']
 
@@ -122,38 +122,37 @@ app.layout = html.Div(
                     href="https://www.oecd.org/fr/",
                 ),
                 html.H4(children="Evolution Démographique de la France"),
-                html.P(
-                    id="description",
-                    children="Description des variabes:",
-                ),
             ],
         ),
         html.Div(
             id="body",
             children=[
                 html.Div(
-                    id="left-column",
+                    id="description",
+                    children="blablabla"
+                ),
+                html.Div(
+                    id="slider-container",
                     children=[
-                        html.Div(
-                            id="slider-container",
-                            children=[
-                                html.P(
-                                    id="slider-text",
-                                    children="Faire coulisser le curseur pour changer l'année :",
-                                ),
-                                dcc.Slider(
-                                    id="year",
-                                    min=2013,  
-                                    max=2019,  
-                                    value=2019,
-                                    step=1,
-                                    marks={i: str(i)
-                                           for i in range(2014, 2020)}
-                                ),
-                            ],
+                        html.P(
+                            id="slider-text",
+                            children="Faire coulisser le curseur pour changer l'année :",
                         ),
+                        dcc.Slider(
+                            id="year",
+                            min=2013,
+                            max=2019,
+                            value=2019,
+                            step=1,
+                            marks={i: {'label':str(i),'style':{'color':'white'}} for i in range(2014,2020)},
+                        ),
+                    ],
+                ),
+                html.Div(
+                    id="selection_graphe",
+                    children=[
                         html.P(id="chart_selector",
-                               children="Sélectionner un graphe :"),
+                                children="Sélectionner un graphe :"),
                         dcc.Dropdown(
                             id="comp",
                             options=[
@@ -168,12 +167,15 @@ app.layout = html.Div(
                             ],
                             value='POPINC',
                         ),
+                    ]
+                ),
+                html.Div(
+                    id = "carte",
+                    children=[
                         html.Button('Revenir à la carte dep', id='reset-button', n_clicks=0),
                         html.Div(
-                            
                             id="map-container",
                             children=[
-                                
                                 dcc.Graph(
                                     id="choropleth",
                                 ),
@@ -182,26 +184,23 @@ app.layout = html.Div(
                                 #    figure=figdep
                                 #)
                             ]
-                        )
+                        ),
                     ],
                 ),
                 html.Div(
-                    id='right-column',
+                    id="graphe",
                     children=[
                         html.P(id='code-selector',
-                               children='Cliquez sur une ville sur la carte'),
-
-                        dcc.Graph(
-                            id="selected-data",
-                            figure=dict(
-                                data=[dict(x=0, y=0)],
-                                layout=dict(
-                                    autofill=True,
-                                    margin=dict(t=75, r=50, b=100, l=50),
+                            children='Cliquez sur une ville sur la carte'),
+                        html.Div(
+                            id="graph_container",
+                            children=[
+                                dcc.Graph(
+                                    id="selected-data",
+                                    style = {"height" : "320px","width":"400px"}
                                 ),
-                            ),
+                            ]
                         ),
-
                     ]
                 )
             ],

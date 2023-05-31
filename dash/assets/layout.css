@@ -1,12 +1,11 @@
 #header {
     position: relative;
-    width: 100%;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: xx-large;
     text-align: center;
     align-items: center;
-    background-color: gainsboro;
-    border: 100px;
+    background-color: rgba(0, 0, 0, 0.781);
+    color: white;
 }
 
 #description {
@@ -18,20 +17,57 @@
 }
 
 #body {
+    background-image: url('back.jpeg');
     display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-areas: "left-column right-column";
+    grid-template-columns: 60% 40%;
+    grid-template-areas: "description description"
+                         "slider-container selection_graphe"
+                         "carte graphe";
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
 }
 
-#left-column {
-    grid-area: left-column;
-    background-color: gainsboro;
+#description {
+    grid-area: description;
+}
+
+#slider-container {
+    padding-left: 10px;
+    grid-area: slider-container;
+    background-color: rgba(220, 220, 220, 0);
     margin-right: 10px;
+    margin-bottom: 10px;
 }
 
-#right-column {
-    grid-area: right-column;
-    background-color: gainsboro;
+#selection_graphe {
+    grid-area: selection_graphe;
+    background-color: rgba(220, 220, 220, 0);
     margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+#carte {
+    grid-area: carte;
+    background-color: rgba(220, 220, 220, 0);
+    margin-right: 10px;
+    text-align: center;
+}
+
+#graph_container {
+    width: 60%;
+}
+
+#graphe {
+    grid-area: graphe;
+    background-color: rgba(220, 220, 220, 0);
+    margin-left: 10px;
+}
+
+#map-container {
+    position: relative;
+    width: 95%;
+    left: 10px;
+    right: 10px;
+    top: 10px;
+    bottom: 10px;
 }
