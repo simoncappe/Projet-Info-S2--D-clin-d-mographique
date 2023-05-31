@@ -1,0 +1,37 @@
+#header {
+    position: relative;
+    width: 100%;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: xx-large;
+    text-align: center;
+    align-items: center;
+    background-color: gainsboro;
+    border: 100px;
+}
+
+#description {
+    font-size: medium;
+    text-align: left;
+    border-left: red solid 5px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-left: 10px;
+}
+
+#body {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-areas: "left-column right-column";
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#left-column {
+    grid-area: left-column;
+    background-color: gainsboro;
+    margin-right: 10px;
+}
+
+#right-column {
+    grid-area: right-column;
+    background-color: gainsboro;
+    margin-left: 10px;
+}
