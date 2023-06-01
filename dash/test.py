@@ -4,12 +4,12 @@ import geopandas as gpd
 import pandas as pd
 import numpy as np
 
-geo = gpd.read_file('data\geometry\Tl2_fr.json')
+geo = gpd.read_file('.\data\geometry\Tl2_fr.json')
 
-df = pd.read_csv('data\data_csv\data_tl2_fr.csv', usecols=['REG_ID', 'Région',
+df = pd.read_csv('.\data\data_csv\data_tl2_fr.csv', usecols=['REG_ID', 'Région',
                                                            'Indicateur', 'SEX', 'Genre', 'POS', 'Année', 'Value'])
 
-# regiondemographique.csv est une exportation du site de l'OCDE que j'ai effectuée
+# region demographique.csv est une exportation du site de l'OCDE que j'ai effectuée
 indi = df['Indicateur'][3]
 df = df[(df.Indicateur == indi) & (df.Année == 2005) & (df.SEX == 'T')]
 
@@ -63,3 +63,4 @@ def display_choropleth(letter):
 
 if __name__ == "__main__":
     app.run_server(debug=True)
+# endregion

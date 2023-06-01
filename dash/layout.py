@@ -29,9 +29,9 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('data\demographic.pkl')  # your path
+dataframe = pd.read_pickle('data/demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
-                       'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'TIME']]
+                       'POPINC', 'NETMOB', 'NETNAT', 'NETMIG','POP' ,'TIME']]
 data = dataframe[dataframe.DEP == '01']
 
 # fonction qui sera utile dans la suite
@@ -61,7 +61,14 @@ def prepare_datamap(i, f, data):
             final['NETMOB'] = final['NETMOB'] + data_frame['NETMOB']
             final['NETMIG'] = final['NETMIG'] + data_frame['NETMIG']
 
+        final['POPI'] = dataframe[dataframe.TIME == i].reset_index()['POP']
         final = final.reset_index()
+        final = final[final.columns[2:]]
+
+        final['POPINC_RATE'] = final['POPINC']/final['POPI']
+        final['NETNAT_RATE'] = final['NETNAT']/final['POPI']
+        final['NETMIG_RATE'] = final['NETMIG']/final['POPI']
+        final['NETMOB_RATE'] = final['NETMOB']/final['POPI']
 
         final['CAUSE'] = np.abs(final[['NETNAT', 'NETMOB', 'NETMIG']]).idxmax(
             axis=1)  # maximum des valeurs absolues des composantes
@@ -85,6 +92,9 @@ def prepare_datamap(i, f, data):
                     final['C'][index] = 'NETNAT +'
                 else:
                     final['C'][index] = 'NETMIG +'
+
+        final = final[['CODGEO', 'REG', 'DEP', 'LIBGEO', 'POPINC_RATE',
+                       'NETNAT_RATE', 'NETMIG_RATE', 'NETMOB_RATE', 'C']]
 
         return final
 
@@ -122,59 +132,64 @@ app.layout = html.Div(
                     href="https://www.oecd.org/fr/",
                 ),
                 html.H4(children="Evolution Démographique de la France"),
-                html.P(
-                    id="description",
-                    children="Description des variabes:",
-                ),
             ],
         ),
         html.Div(
             id="body",
             children=[
                 html.Div(
-                    id="left-column",
+                    id="description",
+                    children="blablabla"
+                ),
+                html.Div(
+                    id="slider-container",
                     children=[
-                        html.Div(
-                            id="slider-container",
-                            children=[
-                                html.P(
-                                    id="slider-text",
-                                    children="Faire coulisser le curseur pour changer l'année :",
-                                ),
-                                dcc.Slider(
-                                    id="year",
-                                    min=2013,
-                                    max=2019,
-                                    value=2019,
-                                    step=1,
-                                    marks={i: str(i)
-                                           for i in range(2014, 2020)}
-                                ),
-                            ],
+                        html.P(
+                            id="slider-text",
+                            children="Faire coulisser le curseur pour changer l'année :",
                         ),
+                        dcc.Slider(
+                            id="year",
+                            min=2013,
+                            max=2019,
+                            value=2019,
+                            step=1,
+                            marks={i: {'label': str(i), 'style': {
+                                'color': 'white'}} for i in range(2014, 2020)},
+                        ),
+                    ],
+                ),
+                html.Div(
+                    id="selection_graphe",
+                    children=[
                         html.P(id="chart_selector",
                                children="Sélectionner un graphe :"),
                         dcc.Dropdown(
                             id="comp",
                             options=[
-                                {'label': "Migration internationale",
-                                    'value': 'NETMIG'},
-                                {'label': 'Migration nationale', 'value': 'NETMOB'},
-                                {'label': "Natalité et décès", 'value': 'NETNAT'},
-                                {'label': "Incrément de population",
-                                    'value': 'POPINC'},
+                                {'label': "Taux de migration internationale",
+                                    'value': 'NETMIG_RATE'},
+                                {'label': 'Taux de migration nationale',
+                                    'value': 'NETMOB_RATE'},
+                                {'label': "Taux de changement naturel",
+                                    'value': 'NETNAT_RATE'},
+                                {'label': "Variation de la population",
+                                    'value': 'POPINC_RATE'},
                                 {'label': "cause du changement de population",
                                     'value': 'C'},  # l'utilisateur voit les labels et les values corresondent à ce que'on appelle dans les callbacks.
                             ],
-                            value='POPINC',
+                            value='POPINC_RATE',
                         ),
+                    ]
+                ),
+                html.Div(
+                    id="carte",
+                    children=[
                         html.Button('Revenir à la carte dep',
                                     id='reset-button', n_clicks=0),
                         html.Div(
-
                             id="map-container",
                             children=[
-
                                 dcc.Graph(
                                     id="choropleth",
                                 ),
@@ -183,20 +198,25 @@ app.layout = html.Div(
                                 #    figure=figdep
                                 # )
                             ]
-                        )
+                        ),
                     ],
                 ),
                 html.Div(
-                    id='right-column',
+                    id="graphe",
                     children=[
                         html.P(id='code-selector',
                                children='Cliquez sur une ville sur la carte'),
 
                         dcc.Graph(
                             id="selected-data",
-                            style={"height": "300px", "width": "400px"} 
+                            figure=dict(
+                                data=[dict(x=0, y=0)],
+                                layout=dict(
+                                    autofill=True,
+                                    margin=dict(t=75, r=50, b=100, l=50),
+                                ),
+                            ),
                         ),
-
                     ]
                 )
             ],
@@ -216,8 +236,6 @@ def update_map(clickData, n_clicks, comp, year):
     ctx = dash.callback_context
     trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-    if (trigger_id == 'reset-button'):
-        return generate_dep_map(year, comp)
     if (trigger_id == 'choropleth') and (clickData is not None):
         DEP = clickData['points'][0]['location']
         fig = generate_com_map(year, comp, DEP)
@@ -257,7 +275,6 @@ def display_hist(clickData):
                                color='Indicateur',
                                barmode="stack", nbins=23, title='Démographie à ' + dataframe[dataframe.CODGEO == code]['LIBGEO'].iloc[0])
             fig.update_layout(
-                 margin=dict(l=30, r=30, t=30, b=20),
                 barmode="overlay",
                 bargap=0.1)
 
@@ -283,7 +300,8 @@ def generate_com_map(year, comp, DEP):
             featureidkey="properties.CODGEO",
             color_continuous_scale="Viridis",
             opacity=0.5,
-            labels={comp: comp},
+            labels={'NETNAT_RATE': 'Taux de changement naturel (net)', 'NETMIG_RATE': 'Taux de migration (net)', 'NETMOB_RATE': 'Taux de mobilité (net)', 'POPINC_RATE': 'Variation de population',
+                    'C': 'Cause du changement démographique', 'NETNAT+': 'changement naturel fait augmenter', 'NETNAT -': 'changement naturel fait diminuer', 'NETMIG +': 'Migration fait augmenter', 'NETMIG -': 'Migration fait baisser', 'NETMOB +': 'Mobilité fait augmenter', 'NETMOB -': 'Mobilité fait baisser'},
             center={"lon": u.x, "lat": u.y},
             zoom=7, title='Démographie dans le'+DEP, hover_name='LIBGEO'
         )
@@ -315,10 +333,25 @@ def generate_dep_map(year, comp):
         data_dep['NETNAT'] = data_dep['NETNAT'] + data_frame['NETNAT']
         data_dep['NETMOB'] = data_dep['NETMOB'] + data_frame['NETMOB']
         data_dep['NETMIG'] = data_dep['NETMIG'] + data_frame['NETMIG']
+        
+    data_dep['POPI'] = dataframe[dataframe.TIME == i].reset_index()['POP']
+    data_dep = data_dep.reset_index()
+    data_dep = data_dep[data_dep.columns[2:]]
+
+    
+
+
 
     data_dep = data_dep[['DEP', 'POPINC', 'NETMOB',
-                         'NETNAT', 'NETMIG']].groupby('DEP').sum()
+                         'NETNAT', 'NETMIG','POPI']].groupby('DEP').sum()
+    
+    data_dep['POPINC_RATE'] = data_dep['POPINC']/data_dep['POPI']
+    data_dep['NETNAT_RATE'] = data_dep['NETNAT']/data_dep['POPI']
+    data_dep['NETMIG_RATE'] = data_dep['NETMIG']/data_dep['POPI']
+    data_dep['NETMOB_RATE'] = data_dep['NETMOB']/data_dep['POPI']
+    
     p = dep['geometry'].iloc[0].centroid
+
     data_dep['CAUSE'] = np.abs(data_dep[['NETNAT', 'NETMOB', 'NETMIG']]).idxmax(
         axis=1)  # maximum des valeurs absolues des composantes
 
@@ -347,7 +380,8 @@ def generate_dep_map(year, comp):
     fig = px.choropleth_mapbox(data_dep, geojson=data_dep.__geo_interface__, locations='DEP', color=comp, featureidkey="properties.DEP",
                                color_continuous_scale="Viridis",
                                opacity=0.5,
-                               labels={comp: comp},
+                               labels={'NETNAT_RATE': 'Taux de changement naturel (net)', 'NETMIG_RATE': 'Taux de migration (net)', 'NETMOB_RATE': 'Taux de mobilité (net)', 'POPINC_RATE': 'Variation de population',
+                    'C': 'Cause du changement démographique', 'NETNAT+': 'changement naturel fait augmenter', 'NETNAT -': 'changement naturel fait diminuer', 'NETMIG +': 'Migration fait augmenter', 'NETMIG -': 'Migration fait baisser', 'NETMOB +': 'Mobilité fait augmenter', 'NETMOB -': 'Mobilité fait baisser'},
                                hover_name='nom',
                                center={"lon": p.x, "lat": p.y},
                                zoom=4
@@ -356,7 +390,6 @@ def generate_dep_map(year, comp):
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
         mapbox=dict(accesstoken=token)
     )
-
     return fig
 
 
