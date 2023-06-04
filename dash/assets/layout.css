@@ -4,9 +4,13 @@
     font-size: xx-large;
     text-align: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.781);
+    background-color:rgba(0, 206, 209, 0.116);
     color: white;
 }
+
+#root{
+    background-image:url('back.jpeg') ;
+    }
 
 #description {
     font-size: medium;
@@ -17,7 +21,7 @@
 }
 
 #body {
-    background-image: url('back.jpeg');
+    background-color:rgba(0, 206, 209, 0.301);
     display: grid;
     grid-template-columns: 60% 40%;
     grid-template-areas: "description description"
@@ -28,7 +32,9 @@
 }
 
 #description {
+
     grid-area: description;
+    background-color:rgba(255, 0, 0, 0.13);
 }
 
 #slider-container {
@@ -56,6 +62,10 @@
 
 #graph_container {
     width: 60%;
+}
+
+#chart_selector{
+    color:white;
 }
 
 #graphe {
