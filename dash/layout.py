@@ -17,7 +17,7 @@ server = app.server
 # Importation des shapefile
 
 # shapefile des communes
-shp = geopandas.read_file('data\/france\/france.shp')[  # your path
+shp = geopandas.read_file('../donnees/france/france.shp')[  # your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
 shp['INSEE_DEP'][29275:29295] = '75'
 shp = shp.rename(columns={'INSEE_COM': 'CODGEO'})
@@ -31,7 +31,7 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('data/demo.pkl')  # your path
+dataframe = pd.read_pickle('../donnees/demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
                        'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'POP', 'TIME']]
 data = dataframe[dataframe.DEP == '01']
@@ -172,19 +172,19 @@ app.layout = html.Div(
                         html.Ul(id = 'list',
                                 children = [
                                     html.Li(id = 'POPINC',
-                                            children = "Variation de la Population : Incrément de populationau sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
+                                            children = "Variation de la Population : Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
                                             ),
                                     html.Li(id = "NETNAT",
                                             children = "Taux de solde naturel : Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale "
                                             ),
                                     html.Li(id = "NETMOB",
-                                            children = "Taux de mobilité : Différence entre le nombre de personnes ayant déménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
+                                            children = "Taux de mobilité : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
                                             ),
                                     html.Li(id = "NETMIG",
-                                            children = "Taux de migration : Différence entre le nombre de personnes ayant déménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger"
+                                            children = "Taux de migration : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger"
                                             ),
                                     html.Li(id = "C",
-                                            children = "Cause du changement de population : Maximum en valeur absolue des trois composantes présentées ci dessus, accompagnée d'un indicateur de si la population a augmenté ou diminuée"
+                                            children = "Cause du changement de population : Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué"
                                             )
                                 ]
                         )
