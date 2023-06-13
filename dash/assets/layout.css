@@ -1,16 +1,48 @@
-#header {
-    position: relative;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: xx-large;
-    text-align: center;
-    align-items: center;
-    background-color:rgba(0, 206, 209, 0.116);
-    color: white;
+#root {
+    background-image: url('back.jpeg') ;
 }
 
-#root{
-    background-image:url('back.jpeg') ;
-    }
+#header {
+    position: sticky;
+    top: 0px;
+    background-color: rgba(66, 66, 108, 0.864);
+    grid-template-areas: "logo titre";
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: large;
+    text-align: center;
+    color: white;
+    z-index: 10;
+}
+
+#titre {
+    grid-area: titre;
+}
+
+#logo {
+    grid-area: logo;
+    width: 5%;
+}
+
+
+
+#body {
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-template-areas: "texte travail";
+    background-color: rgba(255, 188, 188, 0.26);
+}
+
+#texte {
+    grid-area: texte;
+    background-color: rgba(180, 255, 180, 0.237);
+    display: grid;
+    grid-template-areas: "slider-container"
+                         "selection_graphe"
+                         "description";
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+}
 
 #description {
     font-size: medium;
@@ -20,21 +52,10 @@
     padding-left: 10px;
 }
 
-#body {
-    background-color:rgba(0, 206, 209, 0.301);
-    display: grid;
-    grid-template-columns: 60% 40%;
-    grid-template-areas: "description description"
-                         "slider-container selection_graphe"
-                         "carte graphe";
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: white;
-}
 
 #description {
-
+    width: 90%;
     grid-area: description;
-    background-color:rgba(255, 0, 0, 0.13);
 }
 
 #slider-container {
@@ -50,7 +71,13 @@
     background-color: rgba(220, 220, 220, 0);
     margin-left: 10px;
     margin-bottom: 10px;
-    color : black
+    color : white
+}
+
+#travail {
+    grid-area: travail;
+    grid-template-areas: "carte"
+                         "graphe";
 }
 
 #carte {
@@ -72,6 +99,7 @@
     grid-area: graphe;
     background-color: rgba(220, 220, 220, 0);
     margin-left: 10px;
+    color: white;
 }
 
 #map-container {

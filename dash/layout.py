@@ -153,120 +153,130 @@ app.layout = html.Div(
             children=[
                 html.A(
                     html.Img(id="logo", src=dash.get_asset_url(
-                        "logo_ocde.png")),
+                            "logo_ocde.png")),
                     href="https://www.oecd.org/fr/",
                 ),
-                html.H4(children="Evolution Démographique de la France"),
+                html.Div(id="titre", children="Evolution Démographique de la France"),
             ],
         ),
         html.Div(
             id="body",
             children=[
                 html.Div(
-                    id="description",
+                    id="texte",
                     children=[
-                        html.P(
-                            id = "title",
-                            children = "Description des variables"
-                        ),
-                        html.Ul(id = 'list',
-                                children = [
-                                    html.Li(id = 'POPINC',
-                                            children = "Variation de la Population : Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
-                                            ),
-                                    html.Li(id = "NETNAT",
-                                            children = "Taux de solde naturel : Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale "
-                                            ),
-                                    html.Li(id = "NETMOB",
-                                            children = "Taux de mobilité : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
-                                            ),
-                                    html.Li(id = "NETMIG",
-                                            children = "Taux de migration : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger"
-                                            ),
-                                    html.Li(id = "C",
-                                            children = "Cause du changement de population : Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué"
-                                            )
-                                ]
-                        )
-                    ]
-                ),
-                html.Div(
-                    id="slider-container",
-                    children=[
-                        html.P(
-                            id="slider-text",
-                            children="Faire coulisser le curseur pour changer l'année :",
-                        ),
-                        dcc.RangeSlider(#slider pour changer l'année de départ et d'arrivée
-                            id="years",
-                            min=2014,
-                            max=2019,
-                            value=[2014, 2019],
-                            step=1,
-                            marks={i: {'label': str(i), 'style': {
-                                'color': 'white'}} for i in range(2014, 2020)},
-                        ),
-                    ],
-                ),
-                html.Div(
-                    id="selection_graphe",#séléction du graphe: POPINC, cause, etc...
-                    children=[
-                        html.P(id="chart_selector",
-                               children="Sélectionner un graphe :"),
-                        dcc.Dropdown(
-                            id="comp",
-                            options=[
-                                {'label': "Taux de migration internationale",
-                                    'value': 'NETMIG_RATE'},
-                                {'label': 'Taux de migration nationale',
-                                    'value': 'NETMOB_RATE'},
-                                {'label': "Taux de solde naturel",
-                                    'value': 'NETNAT_RATE'},
-                                {'label': "Variation de la population",
-                                    'value': 'POPINC_RATE'},
-                                {'label': "cause du changement de population",
-                                    'value': 'C'},  # l'utilisateur voit les labels et les values corresondent à ce que'on appelle dans les callbacks.
-                            ],
-                            value='POPINC_RATE',
-                        ),
-                    ]
-                ),
-                html.Div(
-                    id="carte",
-                    children=[
-                        html.Button('Revenir à la carte dep',
-                                    id='reset-button', n_clicks=0),#Boutton pour revenir à la carte des département 
-                                                                   #une fois qu'on est passé à la carte des communes
                         html.Div(
-                            id="map-container",#contient la carte
+                            id="description",
                             children=[
-                                dcc.Graph(
-                                    id="choropleth",
+                                html.P(
+                                    id = "title",
+                                    children = "Description des variables"
+                                ),
+                                html.Ul(id = 'list',
+                                    children = [
+                                        html.Li(id = 'POPINC',
+                                                children = "Variation de la Population : Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
+                                                ),
+                                        html.Li(id = "NETNAT",
+                                                children = "Taux de solde naturel : Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale "
+                                                ),
+                                        html.Li(id = "NETMOB",
+                                                children = "Taux de mobilité : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
+                                                ),
+                                        html.Li(id = "NETMIG",
+                                                children = "Taux de migration : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger"
+                                                ),
+                                        html.Li(id = "C",
+                                                children = "Cause du changement de population : Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué"
+                                                )
+                                    ]
+                                )
+                            ]
+                        ),
+                        html.Div(
+                            id="slider-container",
+                            children=[
+                                html.P(
+                                    id="slider-text",
+                                    children="Faire coulisser le curseur pour changer l'année :",
+                                ),
+                                dcc.RangeSlider(#slider pour changer l'année de départ et d'arrivée
+                                    id="years",
+                                    min=2014,
+                                    max=2019,
+                                    value=[2014, 2019],
+                                    step=1,
+                                    marks={i: {'label': str(i), 'style': {
+                                        'color': 'white'}} for i in range(2014, 2020)},
+                                ),
+                            ],
+                        ),
+                        html.Div(
+                            id="selection_graphe",#séléction du graphe: POPINC, cause, etc...
+                            children=[
+                                html.P(id="chart_selector",
+                                    children="Sélectionner un graphe :"),
+                                dcc.Dropdown(
+                                    id="comp",
+                                    options=[
+                                        {'label': "Taux de migration internationale",
+                                            'value': 'NETMIG_RATE'},
+                                        {'label': 'Taux de migration nationale',
+                                            'value': 'NETMOB_RATE'},
+                                        {'label': "Taux de solde naturel",
+                                            'value': 'NETNAT_RATE'},
+                                        {'label': "Variation de la population",
+                                            'value': 'POPINC_RATE'},
+                                        {'label': "cause du changement de population",
+                                            'value': 'C'},  # l'utilisateur voit les labels et les values corresondent à ce que'on appelle dans les callbacks.
+                                    ],
+                                    value='POPINC_RATE',
                                 ),
                             ]
                         ),
-                    ],
+                    ]
                 ),
                 html.Div(
-                    id="graphe",
+                    id="travail",
                     children=[
-                        html.P(id='code-selector',
-                               children='Cliquez sur une ville sur la carte'),
-
-                        dcc.Graph(
-                            id="selected-data",#contient l'histogramme qui apparaît une fois qu'on a cliqué sur une ville sur la carte
-                            figure=dict(
-                                data=[dict(x=0, y=0)],
-                                layout=dict(
-                                    autofill=True,
-                                    margin=dict(t=75, r=50, b=100, l=50),
+                        html.Div(
+                            id="carte",
+                            children=[
+                                html.Button('Revenir à la carte dep',
+                                            id='reset-button', n_clicks=0),#Boutton pour revenir à la carte des département 
+                                                                        #une fois qu'on est passé à la carte des communes
+                                html.Div(
+                                    id="map-container",#contient la carte
+                                    children=[
+                                        dcc.Graph(
+                                            id="choropleth",
+                                        ),
+                                    ]
                                 ),
-                            ),
+                            ],
                         ),
-                    ]
-                )
+                        html.Div(
+                            id="graphe",
+                            children=[
+                                html.P(id='code-selector',
+                                    children='Cliquez sur une ville sur la carte'),
+
+                                dcc.Graph(
+                                    id="selected-data",#contient l'histogramme qui apparaît une fois qu'on a cliqué sur une ville sur la carte
+                                    figure=dict(
+                                        data=[dict(x=0, y=0)],
+                                        layout=dict(
+                                            autofill=True,
+                                            margin=dict(t=75, r=50, b=100, l=50),
+                                        ),
+                                    ),
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
             ],
-        ),
+        )
     ],
 )
 #fin du layout
