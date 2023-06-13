@@ -44,7 +44,7 @@ IND = []
 VALUE = []
 for i in range(2014, 2020):
     TIME += [i, i, i]
-    IND += ['NETMOB', 'NETNAT', 'NETMIG']
+    IND += ['Mobilité', 'Solde naturel', 'Migration']
     VALUE += [dataframe_hist[dataframe_hist.TIME == i]['NETMOB'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]
               ['NETNAT'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]['NETMIG'].iloc[0]]
 df['Année'] = TIME
@@ -55,10 +55,10 @@ fig_hist = px.histogram(df,
                                x="Année",
                                y="Valeur",
                                color='Indicateur',
-                               barmode="stack", nbins=23,width = 600,height=350)
+                               barmode="stack", nbins=23,width = 600,height=350,title = 'démographie à Paris')
 fig_hist.update_layout(
                 barmode="overlay",
-                bargap=0.1)
+                bargap=0.1,yaxis_title="Nombre d'individus")
 
 
 
@@ -330,7 +330,7 @@ def display_hist(clickData):
         code = clickData['points'][0]['location'] #l'index de la commune choisie = CODGEO
         dataframe_hist = dataframe[dataframe.CODGEO == code]
         if dataframe_hist.empty: #vérifie si la dataframe n'est pas vide
-            return {}
+            return fig_hist
         else:
             #travail sur la dataframe pour la formater aux exigences de la fonction px.histogram qui n'accepte que la forme:
             #               TIME INDICATEUR VALUE
@@ -345,7 +345,7 @@ def display_hist(clickData):
             VALUE = []
             for i in range(2014, 2020):
                 TIME += [i, i, i]
-                IND += ['NETMOB', 'NETNAT', 'NETMIG']
+                IND += ['Mobilité', 'Solde naturel', 'Migration']
                 VALUE += [dataframe_hist[dataframe_hist.TIME == i]['NETMOB'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]
                           ['NETNAT'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]['NETMIG'].iloc[0]]
             df['Année'] = TIME
@@ -360,10 +360,10 @@ def display_hist(clickData):
                                height = 350,width = 600)
             fig.update_layout(
                 barmode="overlay",
-                bargap=0.1)
+                bargap=0.1,yaxis_title="Nombre d'individus")
 
             return fig
-    return {}
+    return fig_hist
 
 
 def generate_com_map(years, comp, DEP):
