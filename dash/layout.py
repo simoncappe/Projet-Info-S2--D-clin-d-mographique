@@ -17,7 +17,7 @@ server = app.server
 # Importation des shapefile
 
 # shapefile des communes
-shp = geopandas.read_file('../donnees/france/france.shp')[  # your path
+shp = geopandas.read_file('data/france/france.shp')[  # your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
 shp['INSEE_DEP'][29275:29295] = '75'
 shp = shp.rename(columns={'INSEE_COM': 'CODGEO'})
@@ -31,10 +31,35 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('../donnees/demo.pkl')  # your path
+dataframe = pd.read_pickle('data\demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
                        'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'POP', 'TIME']]
-data = dataframe[dataframe.DEP == '01']
+data = dataframe[dataframe.DEP == '75']
+dataframe_hist = data[['POPINC','NETMOB','NETNAT','NETMIG','TIME']].groupby('TIME').sum()
+dataframe_hist['TIME'] = dataframe_hist.index
+
+df = pd.DataFrame(np.arange(len(dataframe_hist)*3))#dataframe qui ira dans px.historam
+TIME = []
+IND = []
+VALUE = []
+for i in range(2014, 2020):
+    TIME += [i, i, i]
+    IND += ['NETMOB', 'NETNAT', 'NETMIG']
+    VALUE += [dataframe_hist[dataframe_hist.TIME == i]['NETMOB'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]
+              ['NETNAT'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]['NETMIG'].iloc[0]]
+df['Année'] = TIME
+df['Indicateur'] = IND
+df['Valeur'] = VALUE
+#fin du formatage
+fig_hist = px.histogram(df,
+                               x="Année",
+                               y="Valeur",
+                               color='Indicateur',
+                               barmode="stack", nbins=23,width = 600,height=350)
+fig_hist.update_layout(
+                barmode="overlay",
+                bargap=0.1)
+
 
 
 # fonction qui sera utile dans la suite
@@ -262,13 +287,7 @@ app.layout = html.Div(
                             children=[
                                 dcc.Graph(
                                     id="selected-data",#contient l'histogramme qui apparaît une fois qu'on a cliqué sur une ville sur la carte
-                                    figure=dict(
-                                        data=[dict(x=0, y=0)],
-                                        layout=dict(
-                                            autofill=True,
-                                            margin=dict(t=75, r=50, b=100, l=50),
-                                        ),
-                                    ),
+                                    figure=fig_hist
                                 ),
                             ],
                         ),
@@ -337,7 +356,8 @@ def display_hist(clickData):
                                x="Année",
                                y="Valeur",
                                color='Indicateur',
-                               barmode="stack", nbins=23, title='Démographie à ' + dataframe[dataframe.CODGEO == code]['LIBGEO'].iloc[0])
+                               barmode="stack", nbins=23, title='Démographie à ' + dataframe[dataframe.CODGEO == code]['LIBGEO'].iloc[0],
+                               height = 350,width = 600)
             fig.update_layout(
                 barmode="overlay",
                 bargap=0.1)
