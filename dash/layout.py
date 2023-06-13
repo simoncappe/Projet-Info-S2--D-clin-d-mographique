@@ -102,13 +102,13 @@ def prepare_datamap(i, f, data):
 
         # Calcul des incréments en pourcentages
         final['POPINC_RATE'] = final['POPINC'] / \
-            final['POPI']  # POPINC_RATE = (POPF-POPI)/POPI
+            final['POPI']*100  # POPINC_RATE = (POPF-POPI)/POPI
         final['NETNAT_RATE'] = final['NETNAT'] / \
-            final['POPI']  # NETNAT_RATE = NETNAT/POPI
+            final['POPI']*100  # NETNAT_RATE = NETNAT/POPI
         final['NETMIG_RATE'] = final['NETMIG'] / \
-            final['POPI']  # NETMIG_RATE = NETMIG/POPI
+            final['POPI']*100  # NETMIG_RATE = NETMIG/POPI
         final['NETMOB_RATE'] = final['NETMOB'] / \
-            final['POPI']  # NETMOB_RATE = NETMOB/POPI
+            final['POPI']*100  # NETMOB_RATE = NETMOB/POPI
 
         # crétaion de la colonne reflétant la cause principale du changement démographique sur l'année
         final['CAUSE'] = np.abs(final[['NETNAT', 'NETMOB', 'NETMIG']]).idxmax(
@@ -211,6 +211,8 @@ app.layout = html.Div(
                                 ),
                             ],
                         ),
+                        html.P(id='code-selector',
+                            children='Cliquez sur la carte pour choisir une ville'),
                         html.Div(
                             id="selection_graphe",#séléction du graphe: POPINC, cause, etc...
                             children=[
@@ -258,9 +260,6 @@ app.layout = html.Div(
                         html.Div(
                             id="graphe",
                             children=[
-                                html.P(id='code-selector',
-                                    children='Cliquez sur une ville sur la carte'),
-
                                 dcc.Graph(
                                     id="selected-data",#contient l'histogramme qui apparaît une fois qu'on a cliqué sur une ville sur la carte
                                     figure=dict(
@@ -315,7 +314,7 @@ def display_hist(clickData):
             return {}
         else:
             #travail sur la dataframe pour la formater aux exigences de la fonction px.histogram qui n'accepte que la forme:
-            #               TIME INDICATEUR VALUE 
+            #               TIME INDICATEUR VALUE
             #               2014 NETNAT     3
             #               2014 NETMOB     7
             #               ...  ...        ...
@@ -370,10 +369,10 @@ def generate_com_map(years, comp, DEP):
             locations='CODGEO',
             color=comp,
             featureidkey="properties.CODGEO",
-            color_continuous_scale="Viridis",
+            color_continuous_scale="Rdbu",
             opacity=0.5,
-            labels={'NETNAT_RATE': 'Taux de changement naturel (net)', 'NETMIG_RATE': 'Taux de migration (net)',
-                    'NETMOB_RATE': 'Taux de mobilité (net)', 'POPINC_RATE': 'Variation de population',
+            labels={'NETNAT_RATE': 'Taux de changement naturel (net) en %', 'NETMIG_RATE': 'Taux de migration (net) en %',
+                    'NETMOB_RATE': 'Taux de mobilité (net) en %', 'POPINC_RATE': 'Variation de population en %',
                     'C': 'Cause du changement démographique', 'NETNAT +': 'changement naturel fait augmenter', 'NETNAT -': 'changement naturel fait diminuer',
                     'NETMIG +': 'Migration fait augmenter', 'NETMIG -': 'Migration fait baisser',
                     'NETMOB +': 'Mobilité fait augmenter', 'NETMOB -': 'Mobilité fait baisser'},
@@ -423,10 +422,10 @@ def generate_dep_map(years, comp):
     data_dep = data_dep[['DEP', 'POPINC', 'NETMOB',
                          'NETNAT', 'NETMIG', 'POPI']].groupby('DEP').sum()
 
-    data_dep['POPINC_RATE'] = data_dep['POPINC']/data_dep['POPI']
-    data_dep['NETNAT_RATE'] = data_dep['NETNAT']/data_dep['POPI']
-    data_dep['NETMIG_RATE'] = data_dep['NETMIG']/data_dep['POPI']
-    data_dep['NETMOB_RATE'] = data_dep['NETMOB']/data_dep['POPI']
+    data_dep['POPINC_RATE'] = data_dep['POPINC']/data_dep['POPI']*100
+    data_dep['NETNAT_RATE'] = data_dep['NETNAT']/data_dep['POPI']*100
+    data_dep['NETMIG_RATE'] = data_dep['NETMIG']/data_dep['POPI']*100
+    data_dep['NETMOB_RATE'] = data_dep['NETMOB']/data_dep['POPI']*100
 
     p = dep['geometry'].iloc[0].centroid
 
@@ -456,9 +455,9 @@ def generate_dep_map(years, comp):
     data_dep = geopandas.GeoDataFrame(data_dep.merge(
         dep, left_on='DEP', right_on='DEP', how='right'), geometry='geometry')
     fig = px.choropleth_mapbox(data_dep, geojson=data_dep.__geo_interface__, locations='DEP', color=comp, featureidkey="properties.DEP",
-                               color_continuous_scale="Viridis",
+                               color_continuous_scale="Rdbu",
                                opacity=0.5,
-                               labels={'NETNAT_RATE': 'Taux de changement naturel (net)', 'NETMIG_RATE': 'Taux de migration (net)', 'NETMOB_RATE': 'Taux de mobilité (net)', 'POPINC_RATE': 'Variation de population',
+                               labels={'NETNAT_RATE': 'Taux de changement naturel (net) en %', 'NETMIG_RATE': 'Taux de migration (net) en %', 'NETMOB_RATE': 'Taux de mobilité (net) en %', 'POPINC_RATE': 'Variation de population en %',
                                        'C': 'Cause du changement démographique', 'NETNAT+': 'changement naturel fait augmenter', 'NETNAT -': 'changement naturel fait diminuer', 'NETMIG +': 'Migration fait augmenter', 'NETMIG -': 'Migration fait baisser', 'NETMOB +': 'Mobilité fait augmenter', 'NETMOB -': 'Mobilité fait baisser'},
                                hover_name='nom',
                                center={"lon": p.x, "lat": p.y},
