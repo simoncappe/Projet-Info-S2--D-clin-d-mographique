@@ -6,9 +6,11 @@
     position: sticky;
     top: 0px;
     background-color: rgba(66, 66, 108, 0.864);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     grid-template-areas: "logo titre";
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: large;
+    font-size: x-large;
     text-align: center;
     color: white;
     z-index: 10;
@@ -16,11 +18,14 @@
 
 #titre {
     grid-area: titre;
+    padding-right: 500px;
 }
 
 #logo {
+    padding-top: 5px;
     grid-area: logo;
-    width: 5%;
+    padding-left: 500px;
+    width: 20%;
 }
 
 
@@ -38,11 +43,11 @@
     grid-area: texte;
     background-color: rgba(180, 255, 180, 0.237);
     display: grid;
-    grid-template-areas: "slider-container"
-                         "code-selector"
+    grid-template-areas: "code-selector"
                          "selection_graphe"
+                         "slider-container"
                          "description";
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: white;
 }
 
@@ -52,7 +57,6 @@
     font-size: medium;
     text-align: left;
     border-left: red solid 5px;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding-left: 10px;
 }
 
@@ -65,6 +69,8 @@
 }
 
 #code-selector {
+    padding-top: 10px;
+    text-align: center;
     grid-area: code-selector;
     margin-left: 10px;
     font-size: large;
