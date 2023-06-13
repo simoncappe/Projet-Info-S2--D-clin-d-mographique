@@ -17,7 +17,7 @@ server = app.server
 # Importation des shapefile
 
 # shapefile des communes
-shp = geopandas.read_file('../donnees/france/france.shp')[  # your path
+shp = geopandas.read_file('data/france/france.shp')[  # your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
 shp['INSEE_DEP'][29275:29295] = '75'
 shp = shp.rename(columns={'INSEE_COM': 'CODGEO'})
@@ -31,14 +31,16 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('..\donnees\demo.pkl')  # your path
+dataframe = pd.read_pickle('data\demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
                        'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'POP', 'TIME']]
 data = dataframe[dataframe.DEP == '75']
-dataframe_hist = data[['POPINC','NETMOB','NETNAT','NETMIG','TIME']].groupby('TIME').sum()
+dataframe_hist = data[['POPINC', 'NETMOB', 'NETNAT',
+                       'NETMIG', 'TIME']].groupby('TIME').sum()
 dataframe_hist['TIME'] = dataframe_hist.index
 
-df = pd.DataFrame(np.arange(len(dataframe_hist)*3))#dataframe qui ira dans px.historam
+# dataframe qui ira dans px.historam
+df = pd.DataFrame(np.arange(len(dataframe_hist)*3))
 TIME = []
 IND = []
 VALUE = []
@@ -50,16 +52,15 @@ for i in range(2014, 2020):
 df['Année'] = TIME
 df['Indicateur'] = IND
 df['Valeur'] = VALUE
-#fin du formatage
+# fin du formatage
 fig_hist = px.histogram(df,
-                               x="Année",
-                               y="Valeur",
-                               color='Indicateur',
-                               barmode="stack", nbins=23,width = 600,height=350,title = 'démographie à Paris')
+                        x="Année",
+                        y="Valeur",
+                        color='Indicateur',
+                        barmode="stack", nbins=23, width=600, height=350, title='démographie à Paris')
 fig_hist.update_layout(
-                barmode="overlay",
-                bargap=0.1,yaxis_title="Nombre d'individus")
-
+    barmode="overlay",
+    bargap=0.1, yaxis_title="Nombre d'individus")
 
 
 # fonction qui sera utile dans la suite
@@ -86,7 +87,7 @@ def prepare_datamap(i, f, data):
                                                   95026  95  8524 0.15        0.7         ... 0.6
         où les variables POPINC_RATE, NETNAT_RATE, etc décrivent le changement entre l'année i et f incluse.
         POPI désigne la population à l'année i  
-        
+
         Input:  
             i : année initiale, int
             f : année finale, int
@@ -145,18 +146,18 @@ def prepare_datamap(i, f, data):
         for index in range(len(final)):
             if final['SGN'][index] == -1:
                 if final['CAUSE'][index] == 'NETMOB':
-                    final['C'][index] = 'NETMOB -'
+                    final['C'][index] = 'Mobilité -'
                 elif final['CAUSE'][index] == 'NETNAT':
-                    final['C'][index] = 'NETNAT -'
+                    final['C'][index] = 'Solde naturel -'
                 else:
-                    final['C'][index] = 'NETMIG -'
+                    final['C'][index] = 'Migration -'
             else:
                 if final['CAUSE'][index] == 'NETMOB':
-                    final['C'][index] = 'NETMOB +'
+                    final['C'][index] = 'Mobilité +'
                 elif final['CAUSE'][index] == 'NETNAT':
-                    final['C'][index] = 'NETNAT +'
+                    final['C'][index] = 'Solde naturel +'
                 else:
-                    final['C'][index] = 'NETMIG +'
+                    final['C'][index] = 'Migration +'
 
         final = final[['CODGEO', 'REG', 'DEP', 'LIBGEO', 'POPINC_RATE',
                        'NETNAT_RATE', 'NETMIG_RATE', 'NETMOB_RATE', 'C']]
@@ -174,14 +175,15 @@ app.layout = html.Div(
     id="root",
     children=[
         html.Div(
-            id="header",#header avec titre
+            id="header",  # header avec titre
             children=[
                 html.A(
                     html.Img(id="logo", src=dash.get_asset_url(
-                            "logo_ocde.png")),
+                        "logo_ocde.png")),
                     href="https://www.oecd.org/fr/",
                 ),
-                html.Div(id="titre", children="Evolution Démographique de la France"),
+                html.Div(
+                    id="titre", children="Evolution Démographique de la France"),
             ],
         ),
         html.Div(
@@ -194,28 +196,28 @@ app.layout = html.Div(
                             id="description",
                             children=[
                                 html.P(
-                                    id = "title",
-                                    children = "Description des variables"
+                                    id="title",
+                                    children="Description des variables"
                                 ),
-                                html.Ul(id = 'list',
-                                    children = [
-                                        html.Li(id = 'POPINC',
-                                                children = "Variation de la Population : Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
-                                                ),
-                                        html.Li(id = "NETNAT",
-                                                children = "Taux de solde naturel : Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale "
-                                                ),
-                                        html.Li(id = "NETMOB",
-                                                children = "Taux de mobilité : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
-                                                ),
-                                        html.Li(id = "NETMIG",
-                                                children = "Taux de migration : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger"
-                                                ),
-                                        html.Li(id = "C",
-                                                children = "Cause du changement de population : Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué"
-                                                )
-                                    ]
-                                )
+                                html.Ul(id='list',
+                                        children=[
+                                            html.Li(id='POPINC',
+                                                    children="Variation de la Population : Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
+                                                    ),
+                                            html.Li(id="NETNAT",
+                                                    children="Taux de solde naturel : Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale "
+                                                    ),
+                                            html.Li(id="NETMOB",
+                                                    children="Taux de mobilité : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
+                                                    ),
+                                            html.Li(id="NETMIG",
+                                                    children="Taux de migration : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger"
+                                                    ),
+                                            html.Li(id="C",
+                                                    children="Cause du changement de population : Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué"
+                                                    )
+                                        ]
+                                        )
                             ]
                         ),
                         html.Div(
@@ -225,7 +227,7 @@ app.layout = html.Div(
                                     id="slider-text",
                                     children="Faire coulisser le curseur pour changer l'année :",
                                 ),
-                                dcc.RangeSlider(#slider pour changer l'année de départ et d'arrivée
+                                dcc.RangeSlider(  # slider pour changer l'année de départ et d'arrivée
                                     id="years",
                                     min=2014,
                                     max=2019,
@@ -237,12 +239,13 @@ app.layout = html.Div(
                             ],
                         ),
                         html.P(id='code-selector',
-                            children='Cliquez sur la carte pour choisir une ville'),
+                               children='Cliquez sur la carte pour choisir une ville'),
                         html.Div(
-                            id="selection_graphe",#séléction du graphe: POPINC, cause, etc...
+                            # séléction du graphe: POPINC, cause, etc...
+                            id="selection_graphe",
                             children=[
                                 html.P(id="chart_selector",
-                                    children="Sélectionner un graphe :"),
+                                       children="Sélectionner un graphe :"),
                                 dcc.Dropdown(
                                     id="comp",
                                     options=[
@@ -270,10 +273,10 @@ app.layout = html.Div(
                             id="carte",
                             children=[
                                 html.Button('Revenir à la carte dep',
-                                            id='reset-button', n_clicks=0),#Boutton pour revenir à la carte des département 
-                                                                        #une fois qu'on est passé à la carte des communes
+                                            id='reset-button', n_clicks=0),  # Boutton pour revenir à la carte des département
+                                # une fois qu'on est passé à la carte des communes
                                 html.Div(
-                                    id="map-container",#contient la carte
+                                    id="map-container",  # contient la carte
                                     children=[
                                         dcc.Graph(
                                             id="choropleth",
@@ -286,8 +289,9 @@ app.layout = html.Div(
                             id="graphe",
                             children=[
                                 dcc.Graph(
-                                    id="selected-data",#contient l'histogramme qui apparaît une fois qu'on a cliqué sur une ville sur la carte
-                                    figure = fig_hist
+                                    # contient l'histogramme qui apparaît une fois qu'on a cliqué sur une ville sur la carte
+                                    id="selected-data",
+                                    figure=fig_hist
                                 ),
                             ],
                         ),
@@ -297,49 +301,59 @@ app.layout = html.Div(
         )
     ],
 )
-#fin du layout
+# fin du layout
 
-#callback sur la carte choropleth
+# callback sur la carte choropleth
+
+
 @app.callback(
     Output('choropleth', 'figure'),
     Output('reset-button', 'n_clicks'),
-    Input('choropleth', 'clickData'),#cliquer sur un département le fait apparaitre au niveau communal
-    Input('reset-button', 'n_clicks'),#cliquer sur le boutton fait réapparaître la carte des départements
-    Input('comp', 'value'),#donnée du type de graphe qu'on souhaite
-    Input('years', 'value')#donnée du slider avec l'année
+    # cliquer sur un département le fait apparaitre au niveau communal
+    Input('choropleth', 'clickData'),
+    # cliquer sur le boutton fait réapparaître la carte des départements
+    Input('reset-button', 'n_clicks'),
+    Input('comp', 'value'),  # donnée du type de graphe qu'on souhaite
+    Input('years', 'value')  # donnée du slider avec l'année
 )
 def update_map(clickData, n_clicks, comp, years):
     ctx = dash.callback_context
     trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-    if (trigger_id == 'choropleth') and (clickData is not None):#si on a cliqué sur la carte des départements
+    # si on a cliqué sur la carte des départements
+    if (trigger_id == 'choropleth') and (clickData is not None):
         DEP = clickData['points'][0]['location']
         fig = generate_com_map(years, comp, DEP)
         return fig, 0
     else:
-        return generate_dep_map(years, comp), 0 #sinon
+        return generate_dep_map(years, comp), 0  # sinon
 
-#callback sur l'histogramme
+# callback sur l'histogramme
+
+
 @app.callback(
     Output('selected-data', 'figure'),
-    Input('choropleth', 'clickData')#cliquer sur une commune fait apparaître son graphe
+    # cliquer sur une commune fait apparaître son graphe
+    Input('choropleth', 'clickData')
 )
 def display_hist(clickData):
 
     if clickData is not None:
-        code = clickData['points'][0]['location'] #l'index de la commune choisie = CODGEO
+        # l'index de la commune choisie = CODGEO
+        code = clickData['points'][0]['location']
         dataframe_hist = dataframe[dataframe.CODGEO == code]
-        if dataframe_hist.empty: #vérifie si la dataframe n'est pas vide
+        if dataframe_hist.empty:  # vérifie si la dataframe n'est pas vide
             return fig_hist
         else:
-            #travail sur la dataframe pour la formater aux exigences de la fonction px.histogram qui n'accepte que la forme:
+            # travail sur la dataframe pour la formater aux exigences de la fonction px.histogram qui n'accepte que la forme:
             #               TIME INDICATEUR VALUE
             #               2014 NETNAT     3
             #               2014 NETMOB     7
             #               ...  ...        ...
             #               ...  ...        ...
             #               2019 NETMIG     3
-            df = pd.DataFrame(np.arange(len(dataframe_hist)*3))#dataframe qui ira dans px.historam
+            # dataframe qui ira dans px.historam
+            df = pd.DataFrame(np.arange(len(dataframe_hist)*3))
             TIME = []
             IND = []
             VALUE = []
@@ -351,16 +365,16 @@ def display_hist(clickData):
             df['Année'] = TIME
             df['Indicateur'] = IND
             df['Valeur'] = VALUE
-            #fin du formatage
+            # fin du formatage
             fig = px.histogram(df,
                                x="Année",
                                y="Valeur",
                                color='Indicateur',
                                barmode="stack", nbins=23, title='Démographie à ' + dataframe[dataframe.CODGEO == code]['LIBGEO'].iloc[0],
-                               height = 350,width = 600)
+                               height=350, width=600)
             fig.update_layout(
                 barmode="overlay",
-                bargap=0.1,yaxis_title="Nombre d'individus")
+                bargap=0.1, yaxis_title="Nombre d'individus")
 
             return fig
     return fig_hist
@@ -378,11 +392,12 @@ def generate_com_map(years, comp, DEP):
     gdp = shp[shp.INSEE_DEP == DEP]
     data = dataframe[dataframe.DEP == DEP]
     geojson_dict = gdp[['CODGEO', 'geometry']].__geo_interface__
-    carte = geopandas.GeoDataFrame(prepare_datamap(years[0], years[1], data).merge(#utilisation de la fonction prepare_datamap définie au début
+    carte = geopandas.GeoDataFrame(prepare_datamap(years[0], years[1], data).merge(  # utilisation de la fonction prepare_datamap définie au début
         gdp, left_on='CODGEO', right_on='CODGEO', how='right'), geometry='geometry')
 
     if not (carte.empty):
-        u = carte['geometry'].iloc[0].centroid #accès au centroid d'un des Polygons pour savoir où zoomer
+        # accès au centroid d'un des Polygons pour savoir où zoomer
+        u = carte['geometry'].iloc[0].centroid
         fig = px.choropleth_mapbox(
             carte,
             geojson=geojson_dict,
@@ -459,18 +474,18 @@ def generate_dep_map(years, comp):
     for index in range(len(data_dep)):
         if data_dep['SGN'][index] == -1:
             if data_dep['CAUSE'][index] == 'NETMOB':
-                data_dep['C'][index] = 'NETMOB -'
+                data_dep['C'][index] = 'Mobilité -'
             elif data_dep['CAUSE'][index] == 'NETNAT':
-                data_dep['C'][index] = 'NETNAT -'
+                data_dep['C'][index] = 'Solde naturel -'
             else:
-                data_dep['C'][index] = 'NETMIG -'
+                data_dep['C'][index] = 'Migration -'
         else:
             if data_dep['CAUSE'][index] == 'NETMOB':
-                data_dep['C'][index] = 'NETMOB +'
+                data_dep['C'][index] = 'Mobilité +'
             elif data_dep['CAUSE'][index] == 'NETNAT':
-                data_dep['C'][index] = 'NETNAT +'
+                data_dep['C'][index] = 'Solde naturel +'
             else:
-                data_dep['C'][index] = 'NETMIG +'
+                data_dep['C'][index] = 'Migration +'
 
     data_dep = geopandas.GeoDataFrame(data_dep.merge(
         dep, left_on='DEP', right_on='DEP', how='right'), geometry='geometry')
@@ -482,7 +497,7 @@ def generate_dep_map(years, comp):
                                hover_name='nom',
                                center={"lon": p.x, "lat": p.y},
                                zoom=4,
-                               
+
                                )
     fig.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
