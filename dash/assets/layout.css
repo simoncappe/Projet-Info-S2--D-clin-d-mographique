@@ -34,6 +34,7 @@
 }
 
 #texte {
+    margin-top: 15px;
     grid-area: texte;
     background-color: rgba(180, 255, 180, 0.237);
     display: grid;
@@ -100,6 +101,8 @@
 
 #graphe {
     grid-area: graphe;
+    padding-top: 15px;
+    padding-left: 200px;
     background-color: rgba(220, 220, 220, 0);
     margin-left: 10px;
     color: white;
