@@ -17,7 +17,7 @@ server = app.server
 # Importation des shapefile
 
 # shapefile des communes
-shp = geopandas.read_file('data/france/france.shp')[  # your path
+shp = geopandas.read_file('../donnees/france/france.shp')[  # your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
 shp['INSEE_DEP'][29275:29295] = '75'
 shp = shp.rename(columns={'INSEE_COM': 'CODGEO'})
@@ -31,7 +31,7 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('data\demo.pkl')  # your path
+dataframe = pd.read_pickle('..\donnees\demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
                        'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'POP', 'TIME']]
 data = dataframe[dataframe.DEP == '75']
