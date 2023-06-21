@@ -1,5 +1,6 @@
 #root{
     background-color: rgb(199, 209, 209);
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 #header {
@@ -17,8 +18,9 @@
 }
 
 #titre {
+    padding-top: 25px;
     grid-area: titre;
-    padding-right: 500px;
+    padding-right: 300px;
 }
 
 #logo {
@@ -53,7 +55,7 @@
     margin-left: 10px;
     margin-bottom: 600px;
     padding-bottom: 15px;
-    border-bottom: black solid 5px;
+    border-bottom: black double 5px;
 }
 
 #code-selector {
@@ -67,7 +69,7 @@
 
 #selection_graphe {
     padding-top: 10px;
-    border-top: black solid 5px;
+    border-top: black double 5px;
     grid-area: selection_graphe;
     margin-left: 10px;
     margin-bottom: 10px;
@@ -105,6 +107,26 @@
     right: 10px;
     top: 10px;
     bottom: 10px;
+}
+
+
+#reset-button {
+    margin-top: 10px;
+    padding: 5px 14px;
+    font-size: 14px;
+    transition-duration: 0.4s;
+    background-color: rgb(199, 209, 209);
+    border: gray solid 2px;
+}
+
+#reset-button:hover {
+    background-color: rgb(240, 237, 237);
+    cursor: pointer;
+    box-shadow: 0 6px 12px 0 rgba(0,0,0,0.2), 0 4px 12px 0 rgba(0,0,0,0.19);
+}
+
+#tabs {
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 #description{
