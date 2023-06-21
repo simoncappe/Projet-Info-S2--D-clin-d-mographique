@@ -1,5 +1,5 @@
 #root{
-    background-color: rgb(179, 218, 218);
+    background-color: rgb(199, 209, 209);
 }
 
 #header {
@@ -43,17 +43,17 @@
     display: grid;
     grid-template-areas: "code-selector"
                          "selection_graphe"
-                         "slider-container"
-                         "description";
+                         "slider-container";
     font-family: Arial, Helvetica, sans-serif;
 }
 
 
 #slider-container {
-    padding-left: 10px;
     grid-area: slider-container;
-    margin-right: 10px;
-    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-bottom: 600px;
+    padding-bottom: 15px;
+    border-bottom: black solid 5px;
 }
 
 #code-selector {
@@ -61,10 +61,13 @@
     text-align: center;
     grid-area: code-selector;
     margin-left: 10px;
+    margin-bottom: 100px;
     font-size: large;
 }
 
 #selection_graphe {
+    padding-top: 10px;
+    border-top: black solid 5px;
     grid-area: selection_graphe;
     margin-left: 10px;
     margin-bottom: 10px;
