@@ -1,15 +1,16 @@
 #root {
-    background-image: url('back.jpeg') ;
+    background-image: url('whiteback.jpeg');
+    background-color: rgba(255, 255, 255, 0.747);
 }
 
 #header {
     position: sticky;
     top: 0px;
-    background-color: rgba(66, 66, 108, 0.864);
+    background-color:rgba(0, 0, 0, 0.384);
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "logo titre";
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: Impact, Haettenschweiler;
     font-size: x-large;
     text-align: center;
     color: white;
@@ -35,20 +36,18 @@
     display: grid;
     grid-template-columns: 30% 70%;
     grid-template-areas: "texte travail";
-    background-color: rgba(255, 188, 188, 0.26);
 }
 
 #texte {
     margin-top: 15px;
     grid-area: texte;
-    background-color: rgba(180, 255, 180, 0.237);
     display: grid;
     grid-template-areas: "code-selector"
                          "selection_graphe"
-                         "slider-container"
-                         "description";
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color: white;
+                         "slider-container";
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: black;
+    background-color: whitesmoke;
 }
 
 #description {
@@ -102,7 +101,7 @@
 }
 
 #chart_selector{
-    color:white;
+    color:rgb(14, 13, 13);
 }
 
 #graphe {

@@ -17,7 +17,7 @@ server = app.server
 # Importation des shapefile
 
 # shapefile des communes
-shp = geopandas.read_file('../donnees/france/france.shp')[  # your path
+shp = geopandas.read_file('data/france/france.shp')[  # your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
 shp['INSEE_DEP'][29275:29295] = '75'
 shp = shp.rename(columns={'INSEE_COM': 'CODGEO'})
@@ -31,7 +31,7 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('..\donnees\demo.pkl')  # your path
+dataframe = pd.read_pickle('data\demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
                        'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'POP', 'TIME']]
 data = dataframe[dataframe.DEP == '75']
@@ -172,7 +172,6 @@ mapbox_style = "mapbox://styles/theonoble/clh28k2te00mq01pg15ngcvbf"
 
 # Layout
 app.layout = html.Div(
-    id="root",
     children=[
         html.Div(
             id="header",  # header avec titre
@@ -186,6 +185,23 @@ app.layout = html.Div(
                     id="titre", children="Evolution Démographique de la France"),
             ],
         ),
+        dcc.Tabs(
+            id="tabs",
+            value="tab-data",
+            children=[
+                dcc.Tab(label="Données", value="tab-data"),
+                dcc.Tab(label="Description des variables", value="tab-description"),
+                # Ajoutez d'autres onglets si nécessaire
+            ],
+        ),
+        html.Div(id="tab-content"),
+    ]
+)
+x,y,z = 183,217,223
+#layout
+layout = html.Div(
+    id="root",
+    children=[
         html.Div(
             id="body",
             children=[
@@ -195,29 +211,6 @@ app.layout = html.Div(
                         html.Div(
                             id="description",
                             children=[
-                                html.P(
-                                    id="title",
-                                    children="Description des variables"
-                                ),
-                                html.Ul(id='list',
-                                        children=[
-                                            html.Li(id='POPINC',
-                                                    children="Variation de la Population : Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
-                                                    ),
-                                            html.Li(id="NETNAT",
-                                                    children="Solde naturel : Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale "
-                                                    ),
-                                            html.Li(id="NETMOB",
-                                                    children="Solde migratoire interne : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
-                                                    ),
-                                            html.Li(id="NETMIG",
-                                                    children="Solde migratoire externe : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger"
-                                                    ),
-                                            html.Li(id="C",
-                                                    children="Cause du changement de population : Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué"
-                                                    )
-                                        ]
-                                        )
                             ]
                         ),
                         html.Div(
@@ -234,7 +227,7 @@ app.layout = html.Div(
                                     value=[2014, 2019],
                                     step=1,
                                     marks={i: {'label': str(i), 'style': {
-                                        'color': 'white'}} for i in range(2014, 2020)},
+                                        'color': 'black'}} for i in range(2014, 2020)},
                                 ),
                             ],
                         ),
@@ -282,6 +275,8 @@ app.layout = html.Div(
                                             id="choropleth",
                                             figure={}
                                         ),
+                                        html.P(id='selected-dep',
+                                               children=['Carte de la France'])
                                     ]
                                 ),
                             ],
@@ -304,6 +299,49 @@ app.layout = html.Div(
 )
 # fin du layout
 
+#description des variables
+des = html.Div(children=[
+    html.H1(children='Description des variables'),
+    html.Ul(id='list',
+                                        children=[
+                                            html.Li(id='POPINC',
+                                                    children="Variation de la Population : Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
+                                                    ),
+                                            html.Li(id="NETNAT",
+                                                    children="Solde naturel : Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale "
+                                                    ),
+                                            html.Li(id="NETMOB",
+                                                    children="Solde migratoire interne : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"
+                                                    ),
+                                            html.Li(id="NETMIG",
+                                                    children="Solde migratoire externe : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger"
+                                                    ),
+                                            html.Li(id="C",
+                                                    children="Cause du changement de population : Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué"
+                                                    )
+                                        ]
+                                        )
+])
+#fin des
+
+@app.callback(
+    dash.dependencies.Output("tab-content", "children"),
+    [dash.dependencies.Input("tabs", "value")]
+)
+def render_tab_content(tab):
+    if tab == "tab-data":
+        # Contenu de l'onglet "Données"
+        return layout
+    elif tab == "tab-description":
+        # Lien vers la page de description des variables
+        return des
+    # Ajoutez d'autres conditions pour d'autres onglets si nécessaire
+    else:
+        return layout
+
+
+
+
 # callback sur la carte choropleth
 
 
@@ -323,10 +361,10 @@ def update_map(n_clicks, clickData, comp, years):
     if (trigger_id == 'choropleth') and (clickData is not None):
         DEP = clickData['points'][0]['location']
         fig = generate_com_map(years, comp, DEP)
-        return fig,0
+        return fig, 0
     else:
         fig = generate_dep_map(years, comp)
-        return fig,0 # sinon
+        return fig, 0  # sinon
 
 # callback sur l'histogramme
 
@@ -359,7 +397,8 @@ def display_hist(clickData):
             VALUE = []
             for i in range(2014, 2020):
                 TIME += [i, i, i]
-                IND += ['Solde migratoire interne', 'Solde naturel', 'Solde migratoire externe']
+                IND += ['Solde migratoire interne',
+                        'Solde naturel', 'Solde migratoire externe']
                 VALUE += [dataframe_hist[dataframe_hist.TIME == i]['NETMOB'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]
                           ['NETNAT'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]['NETMIG'].iloc[0]]
             df_hist['Année'] = TIME
@@ -430,7 +469,7 @@ def generate_com_map(years, comp, DEP):
                         'NETMIG +': 'Migration fait augmenter', 'NETMIG -': 'Migration fait baisser',
                         'NETMOB +': 'Mobilité fait augmenter', 'NETMOB -': 'Mobilité fait baisser'},
                 center={"lon": u.x, "lat": u.y},
-                zoom=7, title='Démographie dans le'+DEP, hover_name='LIBGEO', range_color=[-cmax,cmax],
+                zoom=7, title='Démographie dans le'+DEP, hover_name='LIBGEO', range_color=[-cmax, cmax], height=500
             )
         fig.update_layout(
             margin={"r": 0, "t": 0, "l": 0, "b": 0},
@@ -512,8 +551,11 @@ def generate_dep_map(years, comp):
         fig = px.choropleth_mapbox(data_dep, geojson=data_dep.__geo_interface__, locations='DEP', color=comp, featureidkey="properties.DEP",
                                    color_continuous_scale="Rdbu",
                                    opacity=0.5,
-                                   labels={'NETNAT_RATE': 'Taux de changement naturel (net) en %', 'NETMIG_RATE': 'Taux de migration (net) en %', 'NETMOB_RATE': 'Taux de mobilité (net) en %', 'POPINC_RATE': 'Variation de population en %',
-                                           'C': 'Cause du changement démographique', 'NETNAT+': 'changement naturel fait augmenter', 'NETNAT -': 'changement naturel fait diminuer', 'NETMIG +': 'Migration fait augmenter', 'NETMIG -': 'Migration fait baisser', 'NETMOB +': 'Mobilité fait augmenter', 'NETMOB -': 'Mobilité fait baisser'},
+                                   labels={'NETNAT_RATE': 'Solde naturel en %', 'NETMIG_RATE': 'Solde migratoire externe (net) en %',
+                                           'NETMOB_RATE': 'Solde migratoire interne en %', 'POPINC_RATE': 'Variation de population en %',
+                                           'C': 'Cause du changement démographique', 'NETNAT +': 'changement naturel fait augmenter', 'NETNAT -': 'changement naturel fait diminuer',
+                                           'NETMIG +': 'Migration fait augmenter', 'NETMIG -': 'Migration fait baisser',
+                                           'NETMOB +': 'Mobilité fait augmenter', 'NETMOB -': 'Mobilité fait baisser'},
                                    hover_name='nom',
                                    center={"lon": p.x, "lat": p.y},
                                    zoom=4
@@ -524,11 +566,14 @@ def generate_dep_map(years, comp):
         fig = px.choropleth_mapbox(data_dep, geojson=data_dep.__geo_interface__, locations='DEP', color=comp, featureidkey="properties.DEP",
                                    color_continuous_scale="Rdbu",
                                    opacity=0.5,
-                                   labels={'NETNAT_RATE': 'Taux de changement naturel (net) en %', 'NETMIG_RATE': 'Taux de migration (net) en %', 'NETMOB_RATE': 'Taux de mobilité (net) en %', 'POPINC_RATE': 'Variation de population en %',
-                                           'C': 'Cause du changement démographique', 'NETNAT+': 'changement naturel fait augmenter', 'NETNAT -': 'changement naturel fait diminuer', 'NETMIG +': 'Migration fait augmenter', 'NETMIG -': 'Migration fait baisser', 'NETMOB +': 'Mobilité fait augmenter', 'NETMOB -': 'Mobilité fait baisser'},
+                                   labels={'NETNAT_RATE': 'Solde naturel en %', 'NETMIG_RATE': 'Solde migratoire externe (net) en %',
+                                           'NETMOB_RATE': 'Solde migratoire interne en %', 'POPINC_RATE': 'Variation de population en %',
+                                           'C': 'Cause du changement démographique', 'NETNAT +': 'changement naturel fait augmenter', 'NETNAT -': 'changement naturel fait diminuer',
+                                           'NETMIG +': 'Migration fait augmenter', 'NETMIG -': 'Migration fait baisser',
+                                           'NETMOB +': 'Mobilité fait augmenter', 'NETMOB -': 'Mobilité fait baisser'},
                                    hover_name='nom',
                                    center={"lon": p.x, "lat": p.y},
-                                   zoom=4, range_color=[-cmax,cmax]
+                                   zoom=4, range_color=[-cmax, cmax], height=500
 
                                    )
 
@@ -537,6 +582,8 @@ def generate_dep_map(years, comp):
         mapbox=dict(accesstoken=token)
     )
     return fig
+
+
 
 
 if __name__ == "__main__":
