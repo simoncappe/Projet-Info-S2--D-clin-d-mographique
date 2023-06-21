@@ -17,7 +17,7 @@ server = app.server
 # Importation des shapefile
 
 # shapefile des communes
-shp = geopandas.read_file('../donnees/france/france.shp')[  # your path
+shp = geopandas.read_file('data/france/france.shp')[  # your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
 shp['INSEE_DEP'][29275:29295] = '75'
 shp = shp.rename(columns={'INSEE_COM': 'CODGEO'})
@@ -31,7 +31,7 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('../donnees/demo.pkl')  # your path
+dataframe = pd.read_pickle('data/demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
                        'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'POP', 'TIME']]
 data = dataframe[dataframe.DEP == '75']
@@ -46,7 +46,7 @@ IND = []
 VALUE = []
 for i in range(2014, 2020):
     TIME += [i, i, i]
-    IND += ['Mobilité', 'Solde naturel', 'Migration']
+    IND += ['Solde migratoire interne', 'Solde naturel', 'Solde migratoire externe']
     VALUE += [dataframe_hist[dataframe_hist.TIME == i]['NETMOB'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]
               ['NETNAT'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]['NETMIG'].iloc[0]]
 df['Année'] = TIME
@@ -146,18 +146,18 @@ def prepare_datamap(i, f, data):
         for index in range(len(final)):
             if final['SGN'][index] == -1:
                 if final['CAUSE'][index] == 'NETMOB':
-                    final['C'][index] = 'Mobilité -'
+                    final['C'][index] = 'Solde migratoire interne -'
                 elif final['CAUSE'][index] == 'NETNAT':
                     final['C'][index] = 'Solde naturel -'
                 else:
-                    final['C'][index] = 'Migration -'
+                    final['C'][index] = 'solde migratoire externe -'
             else:
                 if final['CAUSE'][index] == 'NETMOB':
-                    final['C'][index] = 'Mobilité +'
+                    final['C'][index] = 'Solde migratoire interne +'
                 elif final['CAUSE'][index] == 'NETNAT':
                     final['C'][index] = 'Solde naturel +'
                 else:
-                    final['C'][index] = 'Migration +'
+                    final['C'][index] = 'solde migratoire externe + +'
 
         final = final[['CODGEO', 'REG', 'DEP', 'LIBGEO', 'POPINC_RATE',
                        'NETNAT_RATE', 'NETMIG_RATE', 'NETMOB_RATE', 'C']]
@@ -527,18 +527,18 @@ def generate_dep_map(years, comp):
     for index in range(len(data_dep)):
         if data_dep['SGN'][index] == -1:
             if data_dep['CAUSE'][index] == 'NETMOB':
-                data_dep['C'][index] = 'Mobilité -'
+                data_dep['C'][index] = 'Solde migratoire interne -'
             elif data_dep['CAUSE'][index] == 'NETNAT':
                 data_dep['C'][index] = 'Solde naturel -'
             else:
-                data_dep['C'][index] = 'Migration -'
+                data_dep['C'][index] = 'Solde migratoire externe -'
         else:
             if data_dep['CAUSE'][index] == 'NETMOB':
-                data_dep['C'][index] = 'Mobilité +'
+                data_dep['C'][index] = 'Solde migratoire interne +'
             elif data_dep['CAUSE'][index] == 'NETNAT':
                 data_dep['C'][index] = 'Solde naturel +'
             else:
-                data_dep['C'][index] = 'Migration +'
+                data_dep['C'][index] = 'Solde migratoire externe +'
 
     data_dep = geopandas.GeoDataFrame(data_dep.merge(
         dep, left_on='DEP', right_on='DEP', how='right'), geometry='geometry')
