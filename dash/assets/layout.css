@@ -128,3 +128,41 @@
 #tabs {
     font-family: Arial, Helvetica, sans-serif;
 }
+
+#description{
+    width: 90%;
+    font-family: Arial, Helvetica, sans-serif;
+    grid-area: description;
+    font-size: medium;
+    text-align: left;
+    border-left: red solid 5px;
+    padding-left: 10px;   
+}
+
+#Des{
+    color:black;
+}
+#popincimg{
+    height : 50px;
+    width : 70px;
+    border-color:blue;
+}
+#netnatimg{
+    height:60px;
+    width:60px;
+}
+#netmigimg{
+    height : 70px;
+    width : 70px;
+}
+#netmobimg{
+    height : 70px;
+    width : 70px;
+}
+#causeimg{
+    height: 50px;
+    width : 50px;
+}
+
+
+
