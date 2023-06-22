@@ -206,85 +206,75 @@ layout = html.Div(
             id="body",
             children=[
                 html.Div(
-                    id="texte",
+                    id="slider-container",
                     children=[
-                        html.Div(
-                            id="slider-container",
-                            children=[
-                                html.P(
-                                    id="slider-text",
-                                    children="Faire coulisser le curseur pour changer l'année :",
-                                ),
-                                dcc.RangeSlider(  # slider pour changer l'année de départ et d'arrivée
-                                    id="years",
-                                    min=2014,
-                                    max=2019,
-                                    value=[2014, 2019],
-                                    step=1,
-                                    marks={i: {'label': str(i), 'style': {
-                                        'color': 'black'}} for i in range(2014, 2020)},
-                                ),
-                            ],
+                        html.P(
+                            id="slider-text",
+                            children="Faire coulisser le curseur pour changer l'année :",
                         ),
-                        html.P(id='code-selector',
-                               children='Cliquez sur la carte pour choisir une ville'),
-                        html.Div(
-                            # séléction du graphe: POPINC, cause, etc...
-                            id="selection_graphe",
-                            children=[
-                                html.P(id="chart_selector",
-                                       children="Sélectionner un graphe :"),
-                                dcc.Dropdown(
-                                    id="comp",
-                                    options=[
-                                        {'label': "Solde migratoire externe",
-                                            'value': 'NETMIG_RATE'},
-                                        {'label': 'Solde migratoire interne',
-                                            'value': 'NETMOB_RATE'},
-                                        {'label': "Solde naturel",
-                                            'value': 'NETNAT_RATE'},
-                                        {'label': "Variation de la population",
-                                            'value': 'POPINC_RATE'},
-                                        {'label': "cause du changement de population",
-                                            'value': 'C'},  # l'utilisateur voit les labels et les values corresondent à ce que'on appelle dans les callbacks.
-                                    ],
-                                    value='POPINC_RATE',
-                                ),
-                            ]
+                        dcc.RangeSlider(  # slider pour changer l'année de départ et d'arrivée
+                            id="years",
+                            min=2014,
+                            max=2019,
+                            value=[2014, 2019],
+                            step=1,
+                            marks={i: {'label': str(i), 'style': {
+                                'color': 'black'}} for i in range(2014, 2020)},
+                        ),
+                    ],
+                ),
+                html.P(id='code-selector',
+                        children='Cliquez sur la carte pour choisir une ville'),
+                html.Div(
+                    # séléction du graphe: POPINC, cause, etc...
+                    id="selection_graphe",
+                    children=[
+                        html.P(id="chart_selector",
+                                children="Sélectionner un graphe :"),
+                        dcc.Dropdown(
+                            id="comp",
+                            options=[
+                                {'label': "Solde migratoire externe",
+                                    'value': 'NETMIG_RATE'},
+                                {'label': 'Solde migratoire interne',
+                                    'value': 'NETMOB_RATE'},
+                                {'label': "Solde naturel",
+                                    'value': 'NETNAT_RATE'},
+                                {'label': "Variation de la population",
+                                    'value': 'POPINC_RATE'},
+                                {'label': "cause du changement de population",
+                                    'value': 'C'},  # l'utilisateur voit les labels et les values corresondent à ce que'on appelle dans les callbacks.
+                            ],
+                            value='POPINC_RATE',
                         ),
                     ]
                 ),
                 html.Div(
-                    id="travail",
+                    id="carte",
                     children=[
+                        html.Button('Revenir à la carte dep',
+                                    id='reset-button', n_clicks=0),  # Boutton pour revenir à la carte des département
+                        # une fois qu'on est passé à la carte des communes
                         html.Div(
-                            id="carte",
-                            children=[
-                                html.Button('Revenir à la carte dep',
-                                            id='reset-button', n_clicks=0),  # Boutton pour revenir à la carte des département
-                                # une fois qu'on est passé à la carte des communes
-                                html.Div(
-                                    id="map-container",  # contient la carte
-                                    children=[
-                                        dcc.Graph(
-                                            id="choropleth",
-                                            figure={}
-                                        ),
-                                        html.P(id='selected-dep',
-                                               children=['Carte de la France'])
-                                    ]
-                                ),
-                            ],
-                        ),
-                        html.Div(
-                            id="graphe",
+                            id="map-container",  # contient la carte
                             children=[
                                 dcc.Graph(
-                                    # contient l'histogramme qui apparaît une fois qu'on a cliqué sur une ville sur la carte
-                                    id="selected-data",
-                                    figure=fig_hist
+                                    id="choropleth",
+                                    figure={}
                                 ),
-                            ],
+                                html.P(id='selected-dep',
+                                        children=['Carte de la France'])
+                            ]
+                        ),
+                    ],
+                ),
+                html.Div(
+                    id="graphe",
+                    children=[
+                        dcc.Graph(
+                            # contient l'histogramme qui apparaît une fois qu'on a cliqué sur une ville sur la carte
+                            id="selected-data",
+                            figure=fig_hist
                         ),
                     ],
                 ),

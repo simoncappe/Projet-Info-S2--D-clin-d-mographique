@@ -35,69 +35,47 @@
 #body {
     z-index: 1;
     display: grid;
-    grid-template-columns: 23% 1fr;
-    grid-template-areas: "texte travail";
-}
-
-#texte {
-    margin-top: 15px;
-    grid-area: texte;
-    display: grid;
-    grid-template-areas: "code-selector"
-                         "selection_graphe"
-                         "slider-container";
-    font-family: Arial, Helvetica, sans-serif;
+    grid-template-columns: 60% 1fr;
+    grid-template-areas: "selection_graphe slider-container"
+                         "code-selector code-selector"
+                         "carte graphe";
 }
 
 
 #slider-container {
     grid-area: slider-container;
-    margin-left: 10px;
-    margin-bottom: 600px;
-    padding-bottom: 15px;
-    border-bottom: black double 5px;
+    padding-right: 100px;
 }
 
 #code-selector {
-    padding-top: 10px;
     text-align: center;
     grid-area: code-selector;
-    margin-left: 10px;
-    margin-bottom: 100px;
     font-size: large;
+    border-top: black double 5px;
+    margin-left: 550px;
+    margin-right: 550px;
+    border-bottom: black double 5px;
 }
 
 #selection_graphe {
-    padding-top: 10px;
-    border-top: black double 5px;
     grid-area: selection_graphe;
-    margin-left: 10px;
-    margin-bottom: 10px;
-    color : black
+    color : black;
+    padding-left: 50px;
+    padding-right: 250px;
 }
 
-#travail {
-    grid-area: travail;
-    grid-template-areas: "carte"
-                         "graphe";
-}
 
 #carte {
     grid-area: carte;
-    margin-right: 10px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-
-#graph_container {
-    width: 60%;
-}
-
 
 #graphe {
     grid-area: graphe;
-    padding-top: 15px;
-    padding-left: 200px;
-    margin-left: 10px;
+    display: flex;
+    align-items: center;
 }
 
 #map-container {
@@ -136,7 +114,7 @@
     font-size: medium;
     text-align: left;
     border-left: red solid 5px;
-    padding-left: 10px;   
+    padding-left: 10px;
 }
 
 #Des{
