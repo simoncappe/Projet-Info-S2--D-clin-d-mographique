@@ -17,7 +17,7 @@ server = app.server
 # Importation des shapefile
 
 # shapefile des communes
-shp = geopandas.read_file('data/france/france.shp')[  # your path
+shp = geopandas.read_file('../donnees/france/france.shp')[  # your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
 shp['INSEE_DEP'][29275:29295] = '75'
 shp = shp.rename(columns={'INSEE_COM': 'CODGEO'})
@@ -31,7 +31,7 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('data/demo.pkl')  # your path
+dataframe = pd.read_pickle('../donnees/demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
                        'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'POP', 'TIME']]
 data = dataframe[dataframe.DEP == '75']
@@ -57,7 +57,7 @@ fig_hist = px.histogram(df,
                         x="Année",
                         y="Valeur",
                         color='Indicateur',
-                        barmode="stack", nbins=23, width=600, height=350, title='démographie à Paris')
+                        barmode="stack", nbins=23, width=600, height=350, title='Démographie à Paris')
 fig_hist.update_layout(
     barmode="overlay",
     bargap=0.1, yaxis_title="Nombre d'individus")
@@ -112,13 +112,13 @@ def prepare_datamap(i, f, data):
         final = final.reset_index()
         for p in range(1, len(L)):
             data_frame = L[p].reset_index()
-            # Somme des incrément de population pour avoir l'incrément total de i jusqu'à f
+            # Somme des incréments de population pour avoir l'incrément total de i jusqu'à f
             final['POPINC'] = final['POPINC'] + data_frame['POPINC']
-            # Somme des incrément naturels pour avoir le total sur i jusqu'à f
+            # Somme des incréments naturels pour avoir le total sur i jusqu'à f
             final['NETNAT'] = final['NETNAT'] + data_frame['NETNAT']
-            # Somme des mobilité nette pour avoir le total sur i jusqu'à f
+            # Somme des mobilités nettes pour avoir le total sur i jusqu'à f
             final['NETMOB'] = final['NETMOB'] + data_frame['NETMOB']
-            # Somme des migartions nette pour avoir le total sur i jusqu'à f
+            # Somme des migrations nettes pour avoir le total sur i jusqu'à f
             final['NETMIG'] = final['NETMIG'] + data_frame['NETMIG']
 
         final['POPI'] = dataframe[dataframe.TIME ==
@@ -126,7 +126,7 @@ def prepare_datamap(i, f, data):
         final = final.reset_index()
         final = final[final.columns[2:]]  # clean
 
-        # Calcul des incréments en pourcentages
+        # Calcul des incréments en pourcentage
         final['POPINC_RATE'] = final['POPINC'] / \
             final['POPI']*100  # POPINC_RATE = (POPF-POPI)/POPI
         final['NETNAT_RATE'] = final['NETNAT'] / \
@@ -136,10 +136,10 @@ def prepare_datamap(i, f, data):
         final['NETMOB_RATE'] = final['NETMOB'] / \
             final['POPI']*100  # NETMOB_RATE = NETMOB/POPI
 
-        # crétaion de la colonne reflétant la cause principale du changement démographique sur l'année
+        # création de la colonne reflétant la cause principale du changement démographique sur l'année
         final['CAUSE'] = np.abs(final[['NETNAT', 'NETMOB', 'NETMIG']]).idxmax(
             axis=1)  # maximum des valeurs absolues des composantes
-        # Si la population a augmenté ou baissé
+        # Si la population a augmenté ou diminué
         def signe(x): return (x > 0) + (x < 0)*(-1)
         final['SGN'] = signe(final['POPINC'])
         final['C'] = np.arange(len(final))
@@ -242,8 +242,8 @@ layout = html.Div(
                                     'value': 'NETNAT_RATE'},
                                 {'label': "Variation de la population",
                                     'value': 'POPINC_RATE'},
-                                {'label': "cause du changement de population",
-                                    'value': 'C'},  # l'utilisateur voit les labels et les values corresondent à ce que'on appelle dans les callbacks.
+                                {'label': "Cause du changement de population",
+                                    'value': 'C'},  # l'utilisateur voit les labels et les values correspondant à ce que'on appelle dans les callbacks.
                             ],
                             value='POPINC_RATE',
                         ),
@@ -253,7 +253,7 @@ layout = html.Div(
                     id="carte",
                     children=[
                         html.Button('Revenir à la carte des départements',
-                                    id='reset-button', n_clicks=0),  # Boutton pour revenir à la carte des département
+                                    id='reset-button', n_clicks=0),  # Bouton pour revenir à la carte des départements
                         # une fois qu'on est passé à la carte des communes
                         html.Div(
                             id="map-container",  # contient la carte
@@ -458,8 +458,8 @@ def generate_com_map(years, comp, DEP):
             )
         fig.update_layout(
             margin={"r": 0, "t": 0, "l": 0, "b": 0},
-            mapbox=dict(accesstoken=token)
-        )
+            mapbox=dict(accesstoken=token),
+            )
 
         return fig
     raise dash.exceptions.PreventUpdate
@@ -553,18 +553,17 @@ def generate_dep_map(years, comp):
                                    opacity=0.5,
                                    labels={'NETNAT_RATE': 'Solde naturel en %', 'NETMIG_RATE': 'Solde migratoire externe (net) en %',
                                            'NETMOB_RATE': 'Solde migratoire interne en %', 'POPINC_RATE': 'Variation de population en %',
-                                           'C': 'Cause du changement démographique', 'NETNAT +': 'changement naturel fait augmenter', 'NETNAT -': 'changement naturel fait diminuer',
+                                           'C': 'Cause du changement démographique', 'NETNAT +': 'Changement naturel fait augmenter', 'NETNAT -': 'Changement naturel fait diminuer',
                                            'NETMIG +': 'Migration fait augmenter', 'NETMIG -': 'Migration fait baisser',
                                            'NETMOB +': 'Mobilité fait augmenter', 'NETMOB -': 'Mobilité fait baisser'},
                                    hover_name='nom',
                                    center={"lon": p.x, "lat": p.y},
-                                   zoom=4, range_color=[-cmax, cmax], height=500
-
+                                   zoom=4, range_color=[-cmax, cmax], height=500,
                                    )
 
     fig.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
-        mapbox=dict(accesstoken=token)
+        mapbox=dict(accesstoken=token),
     )
     return fig
 
