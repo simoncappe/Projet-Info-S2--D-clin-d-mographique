@@ -197,7 +197,7 @@ app.layout = html.Div(
         html.Div(id="tab-content"),
     ]
 )
-x,y,z = 199, 209, 209
+
 #layout
 layout = html.Div(
     id="root",
