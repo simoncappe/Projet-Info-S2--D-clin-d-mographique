@@ -35,10 +35,10 @@
 #body {
     z-index: 1;
     display: grid;
-    grid-template-columns: 60% 1fr;
-    grid-template-areas: "selection_graphe slider-container"
-                         "code-selector code-selector"
-                         "carte graphe";
+    grid-template-columns: 45% 1fr 41%;
+    grid-template-areas: "selection_graphe . slider-container"
+                         "carte carte code-selector"
+                         "carte carte graphe";
 }
 
 
@@ -48,20 +48,16 @@
 }
 
 #code-selector {
+    padding-top: 20px;
     text-align: center;
     grid-area: code-selector;
     font-size: large;
-    border-top: black double 5px;
-    margin-left: 550px;
-    margin-right: 550px;
-    border-bottom: black double 5px;
 }
 
 #selection_graphe {
     grid-area: selection_graphe;
     color : black;
     padding-left: 50px;
-    padding-right: 250px;
 }
 
 
@@ -74,8 +70,7 @@
 
 #graphe {
     grid-area: graphe;
-    display: flex;
-    align-items: center;
+    padding-bottom: 70px;
 }
 
 #map-container {
