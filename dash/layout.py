@@ -17,7 +17,7 @@ server = app.server
 # Importation des shapefile
 
 # shapefile des communes
-shp = geopandas.read_file('../donnees/france/france.shp')[  # your path
+shp = geopandas.read_file('data/france/france.shp')[  # your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
 shp['INSEE_DEP'][29275:29295] = '75'
 shp = shp.rename(columns={'INSEE_COM': 'CODGEO'})
@@ -31,7 +31,7 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('../donnees/demo.pkl')  # your path
+dataframe = pd.read_pickle('data/demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
                        'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'POP', 'TIME']]
 data = dataframe[dataframe.DEP == '75']
@@ -197,7 +197,7 @@ app.layout = html.Div(
         html.Div(id="tab-content"),
     ]
 )
-x,y,z = 199, 209, 209
+
 #layout
 layout = html.Div(
     id="root",
@@ -252,7 +252,7 @@ layout = html.Div(
                 html.Div(
                     id="carte",
                     children=[
-                        html.Button('Revenir à la carte dep',
+                        html.Button('Revenir à la carte des départements',
                                     id='reset-button', n_clicks=0),  # Boutton pour revenir à la carte des département
                         # une fois qu'on est passé à la carte des communes
                         html.Div(
