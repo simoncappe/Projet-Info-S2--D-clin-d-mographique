@@ -17,7 +17,7 @@ server = app.server
 # Importation des shapefile
 
 # shapefile des communes
-shp = geopandas.read_file('data/france/france.shp')[  # your path
+shp = geopandas.read_file('../donnees/france/france.shp')[  # your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
 shp['INSEE_DEP'][29275:29295] = '75'
 shp = shp.rename(columns={'INSEE_COM': 'CODGEO'})
@@ -31,7 +31,7 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('data/demo.pkl')  # your path
+dataframe = pd.read_pickle('../donnees/demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
                        'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'POP', 'TIME']]
 data = dataframe[dataframe.DEP == '75']
@@ -206,85 +206,75 @@ layout = html.Div(
             id="body",
             children=[
                 html.Div(
-                    id="texte",
+                    id="slider-container",
                     children=[
-                        html.Div(
-                            id="slider-container",
-                            children=[
-                                html.P(
-                                    id="slider-text",
-                                    children="Faire coulisser le curseur pour changer l'année :",
-                                ),
-                                dcc.RangeSlider(  # slider pour changer l'année de départ et d'arrivée
-                                    id="years",
-                                    min=2014,
-                                    max=2019,
-                                    value=[2014, 2019],
-                                    step=1,
-                                    marks={i: {'label': str(i), 'style': {
-                                        'color': 'black'}} for i in range(2014, 2020)},
-                                ),
-                            ],
+                        html.P(
+                            id="slider-text",
+                            children="Faire coulisser le curseur pour changer l'année :",
                         ),
-                        html.P(id='code-selector',
-                               children='Cliquez sur la carte pour choisir une ville'),
-                        html.Div(
-                            # séléction du graphe: POPINC, cause, etc...
-                            id="selection_graphe",
-                            children=[
-                                html.P(id="chart_selector",
-                                       children="Sélectionner un graphe :"),
-                                dcc.Dropdown(
-                                    id="comp",
-                                    options=[
-                                        {'label': "Solde migratoire externe",
-                                            'value': 'NETMIG_RATE'},
-                                        {'label': 'Solde migratoire interne',
-                                            'value': 'NETMOB_RATE'},
-                                        {'label': "Solde naturel",
-                                            'value': 'NETNAT_RATE'},
-                                        {'label': "Variation de la population",
-                                            'value': 'POPINC_RATE'},
-                                        {'label': "cause du changement de population",
-                                            'value': 'C'},  # l'utilisateur voit les labels et les values corresondent à ce que'on appelle dans les callbacks.
-                                    ],
-                                    value='POPINC_RATE',
-                                ),
-                            ]
+                        dcc.RangeSlider(  # slider pour changer l'année de départ et d'arrivée
+                            id="years",
+                            min=2014,
+                            max=2019,
+                            value=[2014, 2019],
+                            step=1,
+                            marks={i: {'label': str(i), 'style': {
+                                'color': 'black'}} for i in range(2014, 2020)},
+                        ),
+                    ],
+                ),
+                html.P(id='code-selector',
+                        children='Cliquez sur la carte pour choisir une ville'),
+                html.Div(
+                    # séléction du graphe: POPINC, cause, etc...
+                    id="selection_graphe",
+                    children=[
+                        html.P(id="chart_selector",
+                                children="Sélectionner un graphe :"),
+                        dcc.Dropdown(
+                            id="comp",
+                            options=[
+                                {'label': "Solde migratoire externe",
+                                    'value': 'NETMIG_RATE'},
+                                {'label': 'Solde migratoire interne',
+                                    'value': 'NETMOB_RATE'},
+                                {'label': "Solde naturel",
+                                    'value': 'NETNAT_RATE'},
+                                {'label': "Variation de la population",
+                                    'value': 'POPINC_RATE'},
+                                {'label': "cause du changement de population",
+                                    'value': 'C'},  # l'utilisateur voit les labels et les values corresondent à ce que'on appelle dans les callbacks.
+                            ],
+                            value='POPINC_RATE',
                         ),
                     ]
                 ),
                 html.Div(
-                    id="travail",
+                    id="carte",
                     children=[
+                        html.Button('Revenir à la carte dep',
+                                    id='reset-button', n_clicks=0),  # Boutton pour revenir à la carte des département
+                        # une fois qu'on est passé à la carte des communes
                         html.Div(
-                            id="carte",
-                            children=[
-                                html.Button('Revenir à la carte dep',
-                                            id='reset-button', n_clicks=0),  # Boutton pour revenir à la carte des département
-                                # une fois qu'on est passé à la carte des communes
-                                html.Div(
-                                    id="map-container",  # contient la carte
-                                    children=[
-                                        dcc.Graph(
-                                            id="choropleth",
-                                            figure={}
-                                        ),
-                                        html.P(id='selected-dep',
-                                               children=['Carte de la France'])
-                                    ]
-                                ),
-                            ],
-                        ),
-                        html.Div(
-                            id="graphe",
+                            id="map-container",  # contient la carte
                             children=[
                                 dcc.Graph(
-                                    # contient l'histogramme qui apparaît une fois qu'on a cliqué sur une ville sur la carte
-                                    id="selected-data",
-                                    figure=fig_hist
+                                    id="choropleth",
+                                    figure={}
                                 ),
-                            ],
+                                html.P(id='selected-dep',
+                                        children=['Carte de la France'])
+                            ]
+                        ),
+                    ],
+                ),
+                html.Div(
+                    id="graphe",
+                    children=[
+                        dcc.Graph(
+                            # contient l'histogramme qui apparaît une fois qu'on a cliqué sur une ville sur la carte
+                            id="selected-data",
+                            figure=fig_hist
                         ),
                     ],
                 ),
@@ -300,19 +290,19 @@ des = html.Div(id = 'description',children=[
     html.Ul(id='list',
                                         children=[
                                             html.Li(id='POPINC',
-                                                    children=[html.Img(id = 'popincimg',src = 'assets/popincimg.PNG'),"Variation de la Population : Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"]
+                                                    children=[html.Img(id = 'popincimg',src = 'assets/popincimg.PNG'), html.Div(id = 'popinctxt', children = [html.P(className = "sous-titre", children = "Variation de la Population :"), html.P("Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale")])]
                                                     ),
                                             html.Li(id="NETNAT",
-                                                    children=[html.Img(id = 'netnatimg',src = 'assets/netnatimg.PNG'),"Solde naturel : Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale "]
+                                                    children=[html.Img(id = 'netnatimg',src = 'assets/netnatimg.PNG'), html.Div(id = 'netnattxt', children = [html.P(className = "sous-titre", children = "Solde naturel :"), html.P("Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale ")])]
                                                     ),
                                             html.Li(id="NETMOB",
-                                                    children=[html.Img(id = "netmobimg",src = 'assets/netmobimg.PNG'),"Solde migratoire interne : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale"]
+                                                    children=[html.Img(id = "netmobimg",src = 'assets/netmobimg.PNG'), html.Div(id = 'netmobtxt', children = [html.P(className = "sous-titre", children = "Solde migratoire interne :"), html.P("Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale")])]
                                                     ),
                                             html.Li(id="NETMIG",
-                                                    children=[html.Img(id = "netmigimg",src = 'assets/netmigimg.PNG'),"Solde migratoire externe : Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger"]
+                                                    children=[html.Img(id = "netmigimg",src = 'assets/netmigimg.PNG'), html.Div(id = 'netmigtxt', children = [html.P(className = "sous-titre", children = "Solde migratoire externe :"), html.P("Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger")])]
                                                     ),
                                             html.Li(id="C",
-                                                    children=[html.Img(id = "causeimg",src = 'assets/causeimg.PNG'),"Cause du changement de population : Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué"]
+                                                    children=[html.Img(id = "causeimg",src = 'assets/causeimg.PNG'), html.Div(id = 'causetxt', children = [html.P(className = "sous-titre", children = "Cause du changement de population :"), html.P("Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué")])]
                                                     )
                                         ]
                                         )
