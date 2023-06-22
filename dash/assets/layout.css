@@ -35,7 +35,7 @@
 #body {
     z-index: 1;
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: 23% 1fr;
     grid-template-areas: "texte travail";
 }
 
@@ -142,27 +142,79 @@
 #Des{
     color:black;
 }
-#popincimg{
+
+
+
+#POPINC {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 20px;
+}
+
+#NETNAT {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 20px;
+}
+
+#NETMOB {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 20px;
+}
+
+#NETMIG {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 20px;
+}
+
+#C {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 20px;
+}
+
+#popincimg {
     height : 50px;
     width : 70px;
     border-color:blue;
+    padding-right: 20px;
 }
-#netnatimg{
+
+#netnatimg {
+    padding-top: 15px;
     height:60px;
     width:60px;
+    padding-right: 30px;
 }
-#netmigimg{
+
+#netmobimg {
+    padding-top: 15px;
     height : 70px;
     width : 70px;
+    padding-right: 20px;
 }
-#netmobimg{
+
+#netmigimg {
+    padding-top: 15px;
     height : 70px;
     width : 70px;
+    padding-right: 25px;
 }
-#causeimg{
+
+#causeimg {
+    padding-top: 15px;
     height: 50px;
     width : 50px;
+    padding-right: 40px;
 }
 
-
-
+.sous-titre {
+    font-weight: bold;
+}
