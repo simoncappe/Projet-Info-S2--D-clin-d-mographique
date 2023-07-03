@@ -17,7 +17,7 @@ server = app.server
 # Importation des shapefile
 
 # shapefile des communes
-shp = geopandas.read_file('../donnees/france/france.shp')[  # your path
+shp = geopandas.read_file('data/france/france.shp')[  # your path
     ['INSEE_COM', 'INSEE_DEP', 'geometry']]
 shp['INSEE_DEP'][29275:29295] = '75'
 shp = shp.rename(columns={'INSEE_COM': 'CODGEO'})
@@ -31,7 +31,7 @@ p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('../donnees/demo.pkl')  # your path
+dataframe = pd.read_pickle('data/demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
                        'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'POP', 'TIME']]
 data = dataframe[dataframe.DEP == '75']
@@ -458,7 +458,7 @@ def generate_com_map(years, comp, DEP):
             )
         fig.update_layout(
             margin={"r": 0, "t": 0, "l": 0, "b": 0},
-            mapbox=dict(accesstoken=token),
+            mapbox=dict(accesstoken=token),coloraxis_colorbar_title_side="right"
             )
 
         return fig
@@ -543,7 +543,8 @@ def generate_dep_map(years, comp):
                                            'NETMOB +': 'Mobilité fait augmenter', 'NETMOB -': 'Mobilité fait baisser'},
                                    hover_name='nom',
                                    center={"lon": p.x, "lat": p.y},
-                                   zoom=4
+                                   zoom=4,
+                                   mapbox_style = 'light'
 
                                    )
     else:
@@ -559,11 +560,12 @@ def generate_dep_map(years, comp):
                                    hover_name='nom',
                                    center={"lon": p.x, "lat": p.y},
                                    zoom=4, range_color=[-cmax, cmax], height=500,
+                                   mapbox_style = 'light'
                                    )
 
     fig.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
-        mapbox=dict(accesstoken=token),
+        mapbox=dict(accesstoken=token),coloraxis_colorbar_title_side="right"
     )
     return fig
 
