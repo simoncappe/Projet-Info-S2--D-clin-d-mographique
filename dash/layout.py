@@ -439,7 +439,7 @@ def generate_com_map(years, comp, DEP):
                 center={"lon": u.x, "lat": u.y},
                 zoom=7, title='Démographie dans le'+DEP, hover_name='LIBGEO')
         else:
-            cmax = np.max(np.abs(carte[comp]))
+            cmax = 30
             fig = px.choropleth_mapbox(
                 carte,
                 geojson=geojson_dict,
@@ -547,7 +547,7 @@ def generate_dep_map(years, comp):
 
                                    )
     else:
-        cmax = np.max(np.abs(data_dep[comp]))
+        cmax = 7
         fig = px.choropleth_mapbox(data_dep, geojson=data_dep.__geo_interface__, locations='DEP', color=comp, featureidkey="properties.DEP",
                                    color_continuous_scale="Rdbu",
                                    opacity=0.5,
