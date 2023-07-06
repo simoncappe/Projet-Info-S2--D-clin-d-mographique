@@ -285,28 +285,46 @@ layout = html.Div(
 # fin du layout
 
 #description des variables
-des = html.Div(id = 'description',children=[
-    html.H1(id = 'Des',children='Description des variables'),
-    html.Ul(id='list',
-                                        children=[
-                                            html.Li(id='POPINC',
-                                                    children=[html.Img(id = 'popincimg',src = 'assets/popincimg.PNG'), html.Div(id = 'popinctxt', children = [html.P(className = "sous-titre", children = "Variation de la Population :"), html.P("Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale")])]
-                                                    ),
-                                            html.Li(id="NETNAT",
-                                                    children=[html.Img(id = 'netnatimg',src = 'assets/netnatimg.PNG'), html.Div(id = 'netnattxt', children = [html.P(className = "sous-titre", children = "Solde naturel :"), html.P("Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale ")])]
-                                                    ),
-                                            html.Li(id="NETMOB",
-                                                    children=[html.Img(id = "netmobimg",src = 'assets/netmobimg.PNG'), html.Div(id = 'netmobtxt', children = [html.P(className = "sous-titre", children = "Solde migratoire interne :"), html.P("Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale")])]
-                                                    ),
-                                            html.Li(id="NETMIG",
-                                                    children=[html.Img(id = "netmigimg",src = 'assets/netmigimg.PNG'), html.Div(id = 'netmigtxt', children = [html.P(className = "sous-titre", children = "Solde migratoire externe :"), html.P("Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger")])]
-                                                    ),
-                                            html.Li(id="C",
-                                                    children=[html.Img(id = "causeimg",src = 'assets/causeimg.PNG'), html.Div(id = 'causetxt', children = [html.P(className = "sous-titre", children = "Cause du changement de population :"), html.P("Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué")])]
-                                                    )
-                                        ]
-                                        )
-])
+des = html.Div(
+        id = "onglet_des",
+        children = [
+            html.Div(
+                id = 'description',
+                children=[
+                    html.H1(id = 'Des',children='Description des variables'),
+                    html.Ul(
+                        id='list',
+                        children=[
+                            html.Li(id='POPINC',
+                                    children=[html.Img(id = 'popincimg',src = 'assets/popincimg.PNG'), html.Div(id = 'popinctxt', children = [html.P(className = "sous-titre", children = "Variation de la Population :"), html.P("Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale")])]
+                                    ),
+                            html.Li(id="NETNAT",
+                                    children=[html.Img(id = 'netnatimg',src = 'assets/netnatimg.PNG'), html.Div(id = 'netnattxt', children = [html.P(className = "sous-titre", children = "Solde naturel :"), html.P("Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale ")])]
+                                    ),
+                            html.Li(id="NETMOB",
+                                    children=[html.Img(id = "netmobimg",src = 'assets/netmobimg.PNG'), html.Div(id = 'netmobtxt', children = [html.P(className = "sous-titre", children = "Solde migratoire interne :"), html.P("Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale")])]
+                                    ),
+                            html.Li(id="NETMIG",
+                                    children=[html.Img(id = "netmigimg",src = 'assets/netmigimg.PNG'), html.Div(id = 'netmigtxt', children = [html.P(className = "sous-titre", children = "Solde migratoire externe :"), html.P("Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger")])]
+                                    ),
+                            html.Li(id="C",
+                                    children=[html.Img(id = "causeimg",src = 'assets/causeimg.PNG'), html.Div(id = 'causetxt', children = [html.P(className = "sous-titre", children = "Cause du changement de population :"), html.P("Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué")])]
+                                    )
+                        ]
+                    )
+                ]
+            ),
+            html.Div(
+                id="sources",
+                children=[
+                    html.H1("Sources des données :"),
+                    html.A(html.Li("Statistiques de l'OCDE"), href="https://stats.oecd.org/?lang=fr"),
+                    html.A(html.Li("Cartes de l'IGN"), href="https://geoservices.ign.fr/adminexpress"),
+                    html.A(html.Li("Statistiques de l'INSEE"), href="https://www.insee.fr/fr/statistiques/3698339"),
+                ]
+            ),
+        ]
+    )
 #fin des
 
 @app.callback(
