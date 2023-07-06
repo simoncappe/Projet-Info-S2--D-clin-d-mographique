@@ -24,14 +24,14 @@ shp = shp.rename(columns={'INSEE_COM': 'CODGEO'})
 gdp = shp[shp.INSEE_DEP == '01']'''
 
 # shapefile des départements
-dep = geopandas.read_file('data\geometry\Tl3_fr.json')  # your path
+dep = geopandas.read_file('Tl3_fr.json')  # your path
 dep = geopandas.GeoDataFrame(dep.rename(
     columns={'code': 'DEP'}), geometry='geometry')
 p = dep['geometry'].iloc[0].centroid
 
 
 # importation des données
-dataframe = pd.read_pickle('data/demo.pkl')  # your path
+dataframe = pd.read_pickle('demo.pkl')  # your path
 dataframe = dataframe[['CODGEO', 'REG', 'DEP', 'LIBGEO',
                        'POPINC', 'NETMOB', 'NETNAT', 'NETMIG', 'POP', 'TIME']]
 data = dataframe[dataframe.DEP == '75']
@@ -413,7 +413,7 @@ def generate_com_map(years, comp, DEP):
     Output:
         fig   : plotly.express figure 
     '''
-    gdp = geopandas.read_file('data/communes/'+DEP+'.geojson')
+    gdp = geopandas.read_file('communes/'+DEP+'.geojson')
     print(gdp)
     data = dataframe[dataframe.DEP == DEP]
     geojson_dict = gdp[['CODGEO', 'geometry']].__geo_interface__
