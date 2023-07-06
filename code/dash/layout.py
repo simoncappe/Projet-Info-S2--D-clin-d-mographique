@@ -40,7 +40,8 @@ IND = []
 VALUE = []
 for i in range(2014, 2020):
     TIME += [i, i, i]
-    IND += ['Solde migratoire interne', 'Solde naturel', 'Solde migratoire externe']
+    IND += ['Solde migratoire interne',
+            'Solde naturel', 'Solde migratoire externe']
     VALUE += [dataframe_hist[dataframe_hist.TIME == i]['NETMOB'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]
               ['NETNAT'].iloc[0], dataframe_hist[dataframe_hist.TIME == i]['NETMIG'].iloc[0]]
 df['Année'] = TIME
@@ -151,7 +152,7 @@ def prepare_datamap(i, f, data):
                 elif final['CAUSE'][index] == 'NETNAT':
                     final['C'][index] = 'Solde naturel +'
                 else:
-                    final['C'][index] = 'solde migratoire externe + +'
+                    final['C'][index] = 'solde migratoire externe +'
 
         final = final[['CODGEO', 'REG', 'DEP', 'LIBGEO', 'POPINC_RATE',
                        'NETNAT_RATE', 'NETMIG_RATE', 'NETMOB_RATE', 'C']]
@@ -184,7 +185,8 @@ app.layout = html.Div(
             value="tab-data",
             children=[
                 dcc.Tab(label="Données", value="tab-data"),
-                dcc.Tab(label="Description des variables", value="tab-description"),
+                dcc.Tab(label="Description des variables",
+                        value="tab-description"),
                 # Ajoutez d'autres onglets si nécessaire
             ],
         ),
@@ -192,7 +194,7 @@ app.layout = html.Div(
     ]
 )
 
-#layout
+# layout
 layout = html.Div(
     id="root",
     children=[
@@ -218,13 +220,13 @@ layout = html.Div(
                     ],
                 ),
                 html.P(id='code-selector',
-                        children='Cliquez sur la carte pour choisir une ville'),
+                       children='Cliquez sur la carte pour choisir une ville'),
                 html.Div(
                     # séléction du graphe: POPINC, cause, etc...
                     id="selection_graphe",
                     children=[
                         html.P(id="chart_selector",
-                                children="Sélectionner un graphe :"),
+                               children="Sélectionner un graphe :"),
                         dcc.Dropdown(
                             id="comp",
                             options=[
@@ -247,7 +249,7 @@ layout = html.Div(
                     id="carte",
                     children=[
                         html.Button('Revenir à la carte des départements',
-                                    id='reset-button', n_clicks=0),  # Bouton pour revenir à la carte des départements
+                                    id='reset-button', n_clicks=1),  # Bouton pour revenir à la carte des départements
                         # une fois qu'on est passé à la carte des communes
                         html.Div(
                             id="map-container",  # contient la carte
@@ -257,7 +259,7 @@ layout = html.Div(
                                     figure={}
                                 ),
                                 html.P(id='selected-dep',
-                                        children=['Carte de la France'])
+                                       children=['Carte de la France'])
                             ]
                         ),
                     ],
@@ -278,48 +280,57 @@ layout = html.Div(
 )
 # fin du layout
 
-#description des variables
+# description des variables
 des = html.Div(
-        id = "onglet_des",
-        children = [
-            html.Div(
-                id = 'description',
-                children=[
-                    html.H1(id = 'Des',children='Description des variables'),
-                    html.Ul(
-                        id='list',
-                        children=[
-                            html.Li(id='POPINC',
-                                    children=[html.Img(id = 'popincimg',src = 'assets/popincimg.PNG'), html.Div(id = 'popinctxt', children = [html.P(className = "sous-titre", children = "Variation de la Population :"), html.P("Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale")])]
-                                    ),
-                            html.Li(id="NETNAT",
-                                    children=[html.Img(id = 'netnatimg',src = 'assets/netnatimg.PNG'), html.Div(id = 'netnattxt', children = [html.P(className = "sous-titre", children = "Solde naturel :"), html.P("Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale ")])]
-                                    ),
-                            html.Li(id="NETMOB",
-                                    children=[html.Img(id = "netmobimg",src = 'assets/netmobimg.PNG'), html.Div(id = 'netmobtxt', children = [html.P(className = "sous-titre", children = "Solde migratoire interne :"), html.P("Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale")])]
-                                    ),
-                            html.Li(id="NETMIG",
-                                    children=[html.Img(id = "netmigimg",src = 'assets/netmigimg.PNG'), html.Div(id = 'netmigtxt', children = [html.P(className = "sous-titre", children = "Solde migratoire externe :"), html.P("Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger")])]
-                                    ),
-                            html.Li(id="C",
-                                    children=[html.Img(id = "causeimg",src = 'assets/causeimg.PNG'), html.Div(id = 'causetxt', children = [html.P(className = "sous-titre", children = "Cause du changement de population :"), html.P("Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué")])]
-                                    )
-                        ]
-                    )
-                ]
-            ),
-            html.Div(
-                id="sources",
-                children=[
-                    html.H1("Sources des données :"),
-                    html.A(html.Li("Statistiques de l'OCDE"), href="https://stats.oecd.org/?lang=fr"),
-                    html.A(html.Li("Cartes de l'IGN"), href="https://geoservices.ign.fr/adminexpress"),
-                    html.A(html.Li("Statistiques de l'INSEE"), href="https://www.insee.fr/fr/statistiques/3698339"),
-                ]
-            ),
-        ]
-    )
-#fin des
+    id="onglet_des",
+    children=[
+        html.Div(
+            id='description',
+            children=[
+                html.H1(id='Des', children='Description des variables'),
+                html.Ul(
+                    id='list',
+                    children=[
+                        html.Li(id='POPINC',
+                                children=[html.Img(id='popincimg', src='assets/popincimg.PNG'), html.Div(id='popinctxt', children=[html.P(className="sous-titre", children="Variation de la Population :"), html.P(
+                                    "Incrément de population au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale")])]
+                                ),
+                        html.Li(id="NETNAT",
+                                children=[html.Img(id='netnatimg', src='assets/netnatimg.PNG'), html.Div(id='netnattxt', children=[html.P(className="sous-titre", children="Solde naturel :"), html.P(
+                                    "Différence entre le nombre de naissances et le nombre de décès enregistrés au sein de la commune entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale ")])]
+                                ),
+                        html.Li(id="NETMOB",
+                                children=[html.Img(id="netmobimg", src='assets/netmobimg.PNG'), html.Div(id='netmobtxt', children=[html.P(className="sous-titre", children="Solde migratoire interne :"), html.P(
+                                    "Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient déjà en France et le nombre de personne vivant dans la commune et qui ont déménagé autre part en France entre le premier Janvier de l\'année initiale et le premier Janvier de l\'année finale")])]
+                                ),
+                        html.Li(id="NETMIG",
+                                children=[html.Img(id="netmigimg", src='assets/netmigimg.PNG'), html.Div(id='netmigtxt', children=[html.P(className="sous-titre", children="Solde migratoire externe :"), html.P(
+                                    "Différence entre le nombre de personnes ayant emménagé dans la commune qui vivaient à l'étranger et le nombre de personnes vivant dans la commune et qui ont déménagé à l'étranger")])]
+                                ),
+                        html.Li(id="C",
+                                children=[html.Img(id="causeimg", src='assets/causeimg.PNG'), html.Div(id='causetxt', children=[html.P(className="sous-titre", children="Cause du changement de population :"), html.P(
+                                    "Maximum en valeur absolue des trois composantes présentées ci-dessus, accompagnée d'un indicateur montrant si la population a augmenté ou diminué")])]
+                                )
+                    ]
+                )
+            ]
+        ),
+        html.Div(
+            id="sources",
+            children=[
+                html.H1("Sources des données :"),
+                html.A(html.Li("Statistiques de l'OCDE"),
+                       href="https://stats.oecd.org/?lang=fr"),
+                html.A(html.Li("Cartes de l'IGN"),
+                       href="https://geoservices.ign.fr/adminexpress"),
+                html.A(html.Li("Statistiques de l'INSEE"),
+                       href="https://www.insee.fr/fr/statistiques/3698339"),
+            ]
+        ),
+    ]
+)
+# fin des
+
 
 @app.callback(
     dash.dependencies.Output("tab-content", "children"),
@@ -337,31 +348,37 @@ def render_tab_content(tab):
         return layout
 
 
-
-
 # callback sur la carte choropleth
 
 
 @app.callback(
     Output('choropleth', 'figure'),
     Output('reset-button', 'n_clicks'),
+    Output('selected-dep','children'),
+    Input('selected-dep','children'),
     Input('reset-button', 'n_clicks'),
     # cliquer sur un département le fait apparaitre au niveau communal
     Input('choropleth', 'clickData'),
     Input('comp', 'value'),  # donnée du type de graphe qu'on souhaite
     Input('years', 'value')  # donnée du slider avec l'année
 )
-def update_map(n_clicks, clickData, comp, years):
-    ctx = dash.callback_context
-    trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
-    # si on a cliqué sur la carte des départements
-    if (trigger_id == 'choropleth') and (clickData is not None):
-        DEP = clickData['points'][0]['location']
-        fig = generate_com_map(years, comp, DEP)
-        return fig, 0
-    else:
+def update_map(mes,n_clicks, clickData, comp, years):
+    if mes =='Carte de la France':
+        ctx = dash.callback_context
+        trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        # si on a cliqué sur la carte des départements
+        if (trigger_id == 'choropleth') and (clickData is not None):
+            DEP = clickData['points'][0]['location']
+            fig = generate_com_map(years, comp, DEP)
+            return fig, 0, DEP
+    elif n_clicks>0:
         fig = generate_dep_map(years, comp)
-        return fig, 0  # sinon
+        return fig, 0 ,'Carte de la France' # sinon
+    else:
+        DEP = mes
+        fig = generate_com_map(years, comp, DEP)
+        return fig, 0, DEP
+        
 
 # callback sur l'histogramme
 
@@ -471,8 +488,8 @@ def generate_com_map(years, comp, DEP):
             )
         fig.update_layout(
             margin={"r": 0, "t": 0, "l": 0, "b": 0},
-            mapbox=dict(accesstoken=token),coloraxis_colorbar_title_side="right"
-            )
+            mapbox=dict(accesstoken=token), coloraxis_colorbar_title_side="right"
+        )
 
         return fig
     raise dash.exceptions.PreventUpdate
@@ -557,7 +574,7 @@ def generate_dep_map(years, comp):
                                    hover_name='nom',
                                    center={"lon": p.x, "lat": p.y},
                                    zoom=4,
-                                   mapbox_style = 'light'
+                                   mapbox_style='light'
 
                                    )
     else:
@@ -573,16 +590,14 @@ def generate_dep_map(years, comp):
                                    hover_name='nom',
                                    center={"lon": p.x, "lat": p.y},
                                    zoom=4, range_color=[-cmax, cmax], height=500,
-                                   mapbox_style = 'light'
+                                   mapbox_style='light'
                                    )
 
     fig.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
-        mapbox=dict(accesstoken=token),coloraxis_colorbar_title_side="right"
+        mapbox=dict(accesstoken=token), coloraxis_colorbar_title_side="right"
     )
     return fig
-
-
 
 
 if __name__ == "__main__":
