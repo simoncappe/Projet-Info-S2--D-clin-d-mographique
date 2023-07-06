@@ -1,0 +1,6 @@
+numpy
+pandas
+geopandas
+shapely.geometry
+plotly
+dash

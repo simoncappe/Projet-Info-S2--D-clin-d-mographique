@@ -13,19 +13,36 @@ Ce projet GitHub vise à fournir une visualisation interactive des dynamiques d�
 
 Pour exécuter ce projet localement, vous devez disposer des éléments suivants :
 
-- [Python](https://www.python.org/) (version 3.7 ou supérieure)
-- [Pip](https://pip.pypa.io/) (pour installer les dépendances Python)
-- [Jupyter Notebook](https://jupyter.org/) (pour exécuter le code interactif)
+- [Python](https://www.python.org/) 
+- [Pip](https://pip.pypa.io/) 
+- [Jupyter Notebook](https://jupyter.org/)
 
 ## Installation
 
 1. Clonez ce dépôt GitHub sur votre machine locale :
-   git clone git@github.com:simoncappe/Projet-Info-S2--D-clin-d-mographique.git
+   `git clone git@github.com:simoncappe/Projet-Info-S2--D-clin-d-mographique.git`
 2. Accédez au répertoire du projet :
-   cd Projet-Info-S2--D-clin-d-mographique
+   `cd Projet-Info-S2--D-clin-d-mographique`
 
 3. Installez les dépendances Python requises :
-   pip install -r requirements.txt
+   `pip install -r requirements.txt`
+
+## Utilisation
+
+**Accès à l'application dash**
+
+Exécuter `layout.py` et cliquer sur le lien donné par le terminal
+
+**Accès au traitement des dataframes**
+
+Accès au noetbook `POPINC.ipynb`
+
+## Sources des données
+**Pour les données**
+- [Site de l'INSEE](https://www.insee.fr/fr/statistiques/3698339) 
+- [Site de l'OCDE](https://stats.oecd.org/?lang=fr)
+**Pour les shapefiles**
+-[Site de l'IGN](https://geoservices.ign.fr/adminexpress)
 
 
 
