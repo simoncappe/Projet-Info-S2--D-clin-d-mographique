@@ -103,9 +103,12 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+#onglet_des{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 #description{
     width: 90%;
-    font-family: Arial, Helvetica, sans-serif;
     grid-area: description;
     font-size: medium;
     text-align: left;
